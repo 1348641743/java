@@ -1,0 +1,299 @@
+/******************************************************************************
+*
+*	文件名称	: 卡账户【生成个人活期数据】
+*	文件功能	: 卡压力测试增设数据
+*	编程者		: kathy
+*	初作时间	: 20110712
+*	版本		:	 
+*	输入说明	:  argc
+* 							
+*	输出说明	:
+* 						SUCCESS
+* 						FAIL
+*	程序流程	: 生成个人活期账户（产品代号为1000），支持分机构运行,币种为人民币;
+*							对应凭证种类为020（活期一本通）；
+*							系统账号拼法规则为：法人代码+机构号+R+8位序号;
+*             客户账号为：系统账号;
+*							序号从zczxx里最大记录条数开始排序;
+*							凭证序号从1开始排序;
+*	----------------------------------------------------------
+*	时间:				修改者:				
+*	修改内容：
+*		
+*	----------------------------------------------------------
+*****************************************************************/
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "public.h"
+
+#define DFN_ZCZXX
+#define DFN_DZKGX
+#define DFN_DKHZX
+#define DFN_DKZDZ
+#define DFN_ZCZJT
+#define DFN_ZCZLL
+#define DFN_ZCZPZ
+#define DFN_MZHYE
+#define DFN_DKAXX
+#define DFN_ZZHMX
+#define DFN_DKPZF
+#define DFN_DPZDJ
+#define DFN_ZCZBC
+
+#include "zczxx.h"
+#include "dzkgx.h"
+#include "dkhzx.h"
+#include "dkzdz.h"
+#include "zczjt.h"
+#include "zczll.h"
+#include "zczpz.h"
+#include "mzhye.h"
+#include "zzhmx.h"
+#include "dkaxx.h"
+#include "dkpzf.h"
+#include "dpzdj.h"
+#include "zczbc.h"
+
+/********************
+	argv[1] 为法人代码
+	argv[2] 为机构代码
+	argv[3] 为数据量  
+********************/
+
+int printMZHYE(TBL_MZHYE stMZHYE, char *sYYJG_U);
+
+int main(int argc, char **argv)
+{	
+	
+	char sKHZH_U[KHZH_U_SIZE+1]="";      /*客户账号*/
+	char sFZZH_U[FZZH_U_SIZE+1]="";			/*负债账号*/
+	char sZHMC_U[ZHMC_U_SIZE+1]="";      /*账户名称*/
+	char sGLKHBH[GLKHBH_SIZE+1]="";			/*主客户号*/
+	char sZHHUBZ[ZHHUBZ_SIZE+1]="";			/*账户币种*/
+	char sZHCHBZ[ZHCHBZ_SIZE+1]="";			/*账户钞汇标志*/
+	char sZHKHR_[ZHKHR__SIZE+1]="";      /*账户开户日*/
+	char sZHKHGY[ZHKHGY_SIZE+1]="";      /*账户开户柜员*/
+	char sZHBZZF[ZHBZZF_SIZE+1]="";      /*账户标志字符串*/
+	char sCPDH_U[CPDH_U_SIZE+1]="";      /*产品代号*/
+	char sFZCPZL[FZCPZL_SIZE+1]="";      /*负债产品类型*/
+	char sCPMC_U[CPMC_U_SIZE+1]="";			/*产品名称*/
+	char sQIXR_U[QIXR_U_SIZE+1]="";			/*起息日期*/
+	char sZHDQR_[ZHDQR__SIZE+1]="";			/*到期日期*/
+	char sZHCKQX[ZHCKQX_SIZE+1]="";			/*存期*/
+	char sJYRQ_U[JYRQ_U_SIZE+1]="";			/*交易日期*/
+	
+	char sPZZL_U[PZZL_U_SIZE+1]="";     	/*凭证种类*/
+	char sFHDM_U[FHDM_U_SIZE+1]="";      /*分行代码*/
+	char sPZPHO_[PZPHO__SIZE+1]="";      /*凭证批号*/
+	char sPZXH_U[PZXH_U_SIZE+1]="";			/*凭证序号*/
+	char sPZZH_U[PZZH_U_SIZE+1]="";      /*凭证号*/
+	double dDQYE_U=0.00;								/*当前总账余额*/
+	char sYWDH_U[YWDH_U_SIZE+1]="";      /*业务代号*/
+	char sZZHXH_[ZZHXH__SIZE+1]="";			/*子账户序号*/
+	char sXYQSRQ[XYQSRQ_SIZE+1]="";			/*下月起始日期*/
+	char sBZJTFF[BZJTFF_SIZE+1]="";			/*标准计提方法*/
+	char cCHKNUM[2]="";
+	char sTmp[12]="";
+	char sTmp1[10]="";			 /*账号的固定值*/
+	long lRandomNum;     /*随机数 */
+	int i=0;
+	int iCount=0;    /*计数*/
+	int iZongbs=0;   /*凭证序号计数*/
+	char sSXH_UU[SXH_UU_SIZE+1]="";    				 /*账号序号*/
+	char sKHXH_U[7]="";  	 				 /*客户序号*/
+	char sFormat[10];
+	char sFormat1[8];
+	char sFormat2[10];								 /*客户号序号*/
+	EXEC SQL BEGIN DECLARE SECTION;
+		char sZHKHJG[ZHKHJG_SIZE+1]="";			/*账户开户机构*/
+	  char sFRDM_U[FRDM_U_SIZE+1]="";			/*法人代码*/
+		long     inum = 0;
+	EXEC SQL END DECLARE SECTION;
+	
+	TBL_MZHYE stMZHYE;
+
+	/*
+	** 公共信息准备
+	*/
+	strcpy(sZHKHR_,"20110701");			/* 开户日期 */
+	strcpy(sJYRQ_U,"20110701");			/* 交易日期 */
+	
+	strcpy(sFRDM_U,argv[1]);				/* 法人代码 */
+	strcpy(sZHKHJG,argv[2]);				/*账户开户机构*/
+	
+	/*strcpy(sGLKHBH,"010000000002");	主客户号*/
+	/*strcpy(sZHMC_U,"666666");				账户名*/
+	strcpy(sCPDH_U,"1000");				  /*产品代码*/
+	strcpy(sCPMC_U,"个人活期");     /*产品名称*/
+	strcpy(sQIXR_U,"20110701");			/*起息日期*/
+	strcpy(sZHDQR_,"");							/*到期日期*/
+	strcpy(sYWDH_U,"3173");					/*业务代号*/
+	strcpy(sZHCKQX,"0D");						/*存期*/
+	strcpy(sZHHUBZ,"01");						/*账户币种*/
+	strcpy(sZHCHBZ,"0");						/*抄汇标志*/
+	strcpy(sZHKHGY,"019707");       /*开户柜员*/
+	strcpy(sFZCPZL,"0");						/*负债产品类型*/
+	strcpy(sPZZL_U,"020");					/*凭证种类*/
+	strcpy(sFHDM_U,"99");  					/*分行代码*/
+	strcpy(sPZPHO_,sZHKHJG);        /*凭证批号*/
+	strcpy(sZZHXH_,"0001");					/*子账户序号*/
+	strcpy(sBZJTFF,"10");
+	
+	dDQYE_U = 100000;									/*账户余额*/
+	
+	strcpy(sZHBZZF,"0000000000000000000000000");			/*账户标志字符串*/
+	/*sprintf(sFZZH_U,"%s%sR",sFRDM_U,sZHKHJG);			负债账号*/
+	/*2015	sprintf(sTmp1,"%s%sR",sFRDM_U,sZHKHJG);				负债账号*/
+	sprintf(sTmp1,"%s%s","622422",argv[2]);	
+	printf("0 sFZZH_U——sTmp1=[%s]\n", sTmp1);
+	
+	sprintf(sFormat, "%%0%dld", SXH_UU_SIZE);   /*账号序号*/
+	sprintf(sFormat1, "%%0%dld", PZXH_U_SIZE);  /*凭证序号*/
+	
+	sprintf(sFormat2, "%%0%dld", 6);  /*客户号序号*/
+	
+	printf("sFormat =[%s], sFormat1= [%s], sFormat2=[%s]\n", sFormat,sFormat1,sFormat2);
+		
+	/*
+	** 账户信息准备
+	*/
+	/*取当前机构最大账户记录数*/
+	EXEC SQL select count(*) into :inum from zczxx where frdm_u=:sFRDM_U and zhkhjg=:sZHKHJG;
+	
+	printf("sFRDM_U[%s],sZHKHJG[%s],inum =[%ld]\n", sFRDM_U,sZHKHJG,inum);
+	
+	for(i = 0; i<atol(argv[3]); i++)
+	{
+	  /*生成负债账号和客户账号
+	  测试数据的系统账号规则：4位法人代码 + 4位机构号 +  R + 8位序号
+	                客户账号：系统账号
+	  表中活期、定期统一排序
+	  
+	  客户号(户名)：  01+机构号+序号
+	  */
+	  iCount = inum+i+1;
+	  iZongbs = i+1;
+	  
+	  /*0、凭证序号*/
+	  memset((char *)&sPZXH_U,0,sizeof(sPZXH_U));
+	  memset((char *)&sPZZH_U,0,sizeof(sPZZH_U));
+	  sprintf(sPZXH_U,sFormat1,iZongbs);
+	  		
+		/*凭证号*/
+	  strcpy(sPZZH_U,sPZZL_U);
+	  strcat(sPZZH_U,sFHDM_U);
+	  strcat(sPZZH_U,sPZPHO_);
+	  strcat(sPZZH_U,sPZXH_U);
+	  
+	  /*1、系统账号*/
+	  memset((char *)&sSXH_UU,0,sizeof(sSXH_UU));
+	  memset((char *)&sFZZH_U,0,sizeof(sFZZH_U));
+	  
+	  sprintf(sSXH_UU,sFormat,iCount);
+	  
+	  strcpy(sFZZH_U,sTmp1);
+		strcat(sFZZH_U,sSXH_UU);
+		printf("[%d]:负债账号 sFZZH_U is [%s] sSXH_UU=[%s]\n", i,sFZZH_U,sSXH_UU);
+  	
+  	/*2、客户账号*/
+  	strcpy(sKHZH_U,sFZZH_U);			/*客户账号*/  	  	  	
+  	/*先不加随机数 
+  	memset((char *)&sTmp,0,sizeof(sTmp));   *产生校验位*
+  	memset((char *)&cCHKNUM,0,sizeof(cCHKNUM));
+  	lRandomNum = rand();	* 产生随机数 *
+  	sprintf(sTmp,"%d",lRandomNum);
+  	strncpy(cCHKNUM, sTmp+1, 1);
+  	
+		strcat(sKHZH_U,cCHKNUM);  	
+		*/
+		printf("[%d]:客户账号sKHZH_U is [%s]\n", i, sKHZH_U);
+		
+		/*3、客户号*/
+  	memset((char *)&sKHXH_U,0,sizeof(sKHXH_U));
+  	memset((char *)&sGLKHBH,0,sizeof(sGLKHBH));
+  	
+  	sprintf(sKHXH_U,sFormat2,iZongbs);
+  	
+  	strcpy(sGLKHBH,"01");
+	  strcat(sGLKHBH,sZHKHJG);
+	  strcat(sGLKHBH,sKHXH_U);
+  	strcpy(sZHMC_U,sGLKHBH);				/*账户名*/
+  	
+  	printf("[%d]:客户号sGLKHBH is [%s], 户名sZHMC_U=[%s],序号[%s]\n", i, sGLKHBH,sZHMC_U,sKHXH_U);
+  	
+	
+	  /* 客户账号表 */
+	
+		/*账户余额发生明细表*/
+		//memset(&mzhye.stMZHYE, 0, sizeof(mzhye.stMZHYE) );
+		memset(&stMZHYE, 0, sizeof(stMZHYE) );
+		strcpy(stMZHYE.frdm_u, sFRDM_U);
+		strcpy(stMZHYE.fzzh_u, sFZZH_U);
+		strcpy(stMZHYE.zhmc_u, sZHMC_U);
+		strcpy(stMZHYE.yezdmc, "ZZYE_U");
+		stMZHYE.xlho_u = 0;
+		strcpy(stMZHYE.jdbj_u, "1");
+		strcpy(stMZHYE.jyibz_, sZHHUBZ);
+		strcpy(stMZHYE.zhchbz, sZHCHBZ);
+		stMZHYE.jyjine = dDQYE_U;
+		stMZHYE.ye_uuu = dDQYE_U;
+		strcpy(stMZHYE.khzh_u, sKHZH_U);
+		strcpy(stMZHYE.zhzxh_, sZZHXH_);
+		strcpy(stMZHYE.cpdh_u, sCPDH_U);
+		strcpy(stMZHYE.ssdx_u, "1");
+		strcpy(stMZHYE.zhckqx, sZHCKQX);
+		strcpy(stMZHYE.pzzl_u, sPZZL_U);
+		strcpy(stMZHYE.pzph_u, sPZPHO_);
+		strcpy(stMZHYE.pzxh_u, sPZXH_U);
+		strcpy(stMZHYE.zydm_u, "");
+		strcpy(stMZHYE.zyms_u, "");
+		strcpy(stMZHYE.qd_uuu, "00");
+		strcpy(stMZHYE.wbjym_, "1052");
+		strcpy(stMZHYE.nbjym_, "1052");
+		strcpy(stMZHYE.xzjdbz, "0");
+		strcpy(stMZHYE.jydszh, "");
+		strcpy(stMZHYE.dfzhao, "");
+		strcpy(stMZHYE.dfhm_u, "");
+		strcpy(stMZHYE.dfkhlx, "");
+		strcpy(stMZHYE.jgwdmc, "");
+		strcpy(stMZHYE.dfjglx, "");
+		strcpy(stMZHYE.dfjgdm, "");
+		strcpy(stMZHYE.dlr_uu, "");
+		strcpy(stMZHYE.dlrzjl, "0");
+		strcpy(stMZHYE.dlrzjh, "");
+		strcpy(stMZHYE.dlrgj_, "");
+		strcpy(stMZHYE.zhcpdh, "");
+		strcpy(stMZHYE.zhzhh_, "");
+		strcpy(stMZHYE.yhywbh, "");
+		strcpy(stMZHYE.xgywh_, "");
+		strcpy(stMZHYE.gylshm, "111111");
+		strcpy(stMZHYE.yyjg_u, sZHKHJG);
+		strcpy(stMZHYE.jyzwjg, sZHKHJG);
+		strcpy(stMZHYE.zhkhjg, sZHKHJG);
+		strcpy(stMZHYE.zhzwjg, sZHKHJG);
+		strcpy(stMZHYE.jbr_uu, sZHKHGY);
+		strcpy(stMZHYE.fhr_uu, "");
+		strcpy(stMZHYE.spr_uu, "");
+		strcpy(stMZHYE.jyrq_u, sZHKHR_);
+		stMZHYE.jysj_u = 0;
+		strcpy(stMZHYE.zjrq_u, "");
+		strcpy(stMZHYE.cmbz_u, "0");
+		strcpy(stMZHYE.bczbz_, "0");
+		strcpy(stMZHYE.czyrq_, "");
+		strcpy(stMZHYE.ygylsh, "");
+		strcpy(stMZHYE.bzxx_u, "");
+		strcpy(stMZHYE.whgy_u, "");
+		strcpy(stMZHYE.whjg_u, "");
+		strcpy(stMZHYE.whrq_u, "");
+		stMZHYE.whsj_u = 0;
+		stMZHYE.sjc_uu = 0;
+		strcpy(stMZHYE.jilzt_, "0");
+
+		printMZHYE(stMZHYE, sZHKHJG);
+	
+	}
+
+	return SUCCESS;	
+}

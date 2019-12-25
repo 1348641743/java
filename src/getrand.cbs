@@ -1,0 +1,19 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+char *getrand(char *type, char *yyjg_u)
+{
+	time_t	t;
+	char	*rd;
+
+	srand((unsigned)time(&t)*13);
+
+	if ( 0 == strcmp("1", type) )
+	{
+		sprintf(rd, "01%s%06d", yyjg_u, rand()%131313);
+	}
+
+	return rd;
+}

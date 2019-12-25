@@ -1,0 +1,269 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "public.h"
+
+#define DFN_DTYKH
+#define DFN_DZJXX
+
+#include "dtykh.h"
+#include "dzjxx.h"
+
+/********************
+	argv[1] 为法人代码
+	argv[2] 为机构代码
+	argv[3] 为数据量  
+********************/
+
+int printDTYKH(TBL_DTYKH stDTYKH,char *sYYJG_U);
+int printDZJXX(TBL_DZJXX stDZJXX,char *sYYJG_U);
+
+int main(int argc, char *argv[])
+{
+
+	char	sFRDM_U[FRDM_U_SIZE+1];
+	char	sYYJG_U[YYJG_U_SIZE+1];
+	int		iResult = SUCCESS;
+	long    i=0,j=1;
+ 
+	TBL_DTYKH stDTYKH;
+	TBL_DZJXX stDZJXX;
+
+	memset(sFRDM_U, 0, sizeof(sFRDM_U));
+	memset(sYYJG_U, 0, sizeof(sYYJG_U));
+
+	strcpy(sFRDM_U, argv[1]);
+	strcpy(sYYJG_U, argv[2]);
+ 
+	printf("sFRDM_U is [%s], sYYJG_U is [%s]\n", sFRDM_U, sYYJG_U);
+	/*====================User Code Begin====================*/
+    for ( i = 0; i < atol(argv[3]); i++ )
+    {
+    	//memset(&dtykh.stDTYKH,0,sizeof(dtykh.stDTYKH));
+    	//memset(&dzjxx.stDZJXX,0,sizeof(dzjxx.stDZJXX));
+    	memset(&stDTYKH, 0, sizeof(stDTYKH));
+	memset(&stDZJXX, 0, sizeof(stDZJXX));
+	strcpy(stDTYKH.frdm_u, sFRDM_U);
+		sprintf(stDTYKH.khbh_u, "00%s%06d",sYYJG_U,j);
+		sprintf(stDTYKH.khzwm_, "同业测试客户%s",stDTYKH.khbh_u);
+		strcpy(stDTYKH.ywmc_u, "");
+		strcpy(stDTYKH.khjm_u, "");
+		strcpy(stDTYKH.khjp_u, "");
+		strcpy(stDTYKH.cym_uu, "");
+		strcpy(stDTYKH.qybzbm, "");
+		strcpy(stDTYKH.khjglx, "");		/** stDTYKH.TYKHLX -> stDTYKH.KHJGLX  jinjt 20160713**/
+		strcpy(stDTYKH.tyjgdm, "");
+		strcpy(stDTYKH.zmwjzl, "1");
+		strcpy(stDTYKH.zbjg_u, "组织机构代码");	/** stDTYKH.ZJZLMS -> stDTYKH.ZBJG_U  jinjt **/
+		strcpy(stDTYKH.zmwjbh, stDTYKH.khbh_u);
+		
+		//strcpy(stDTYKH.khzhpj, "");
+		strcpy(stDTYKH.clrq_u, "");
+		strcpy(stDTYKH.pzjgbh, "");		/** stDTYKH.PZCLJG -> stDTYKH.PZJGBH  jinjt **/
+		strcpy(stDTYKH.hnkhbz, "");
+		strcpy(stDTYKH.jgh_uu, "");
+		strcpy(stDTYKH.bm_uuu, "");
+		strcpy(stDTYKH.gbdm_u, "");
+		//strcpy(stDTYKH.gjqc_u, "");		
+		strcpy(stDTYKH.dzdm_u, "");
+		//strcpy(stDTYKH.dz_uuu, "");		
+		//strcpy(stDTYKH.dqdm_u, "");
+		//strcpy(stDTYKH.ssdqdm, "");
+		//strcpy(stDTYKH.ssdq_u, "");
+		strcpy(stDTYKH.khlb_u, "");
+		//strcpy(stDTYKH.jjlx_u, "");
+		strcpy(stDTYKH.syzlx_, "");   	
+
+		//strcpy(stDTYKH.jyzzxs, "");
+		strcpy(stDTYKH.zuzxz_, "");
+
+		//strcpy(stDTYKH.hylb_u, "");
+		strcpy(stDTYKH.hydm_u, "");		
+		//strcpy(stDTYKH.dwyb_u, "");
+		//strcpy(stDTYKH.bgdz_u, "");
+		strcpy(stDTYKH.yydzbh, "");		
+
+		//strcpy(stDTYKH.ywdz_u, "");
+		strcpy(stDTYKH.yyywdz, "");
+
+		strcpy(stDTYKH.bgdhbh, "");
+		strcpy(stDTYKH.czdhbh, "");
+		//strcpy(stDTYKH.wz_uuu, "");
+		strcpy(stDTYKH.dzyjbh, "");
+		//strcpy(stDTYKH.txdz_u, "");
+		//strcpy(stDTYKH.yzbm_u, "");
+		//strcpy(stDTYKH.lxr_uu, "");
+		//strcpy(stDTYKH.dhhaom, "");
+		//stDTYKH.xh_uuu = 0;   			
+		stDTYKH.qyrs_u = 0; 			/** jinjt **/
+		strcpy(stDTYKH.cwzkhh, "");
+		strcpy(stDTYKH.kggdkh, "");
+		//strcpy(stDTYKH.frzjsr, "");
+		//stDTYKH.lxrs_u = 0;
+		strcpy(stDTYKH.dwmyjy, "");
+		strcpy(stDTYKH.qywgdm, "");
+		strcpy(stDTYKH.qysx_u, "");
+		strcpy(stDTYKH.szsbbs, "");
+		strcpy(stDTYKH.tsjjql, "");
+		strcpy(stDTYKH.zczjbz, "");
+		//stDTYKH.zuncje = 0;
+		stDTYKH.sszb_u = 0;
+		strcpy(stDTYKH.biccod, "");
+		strcpy(stDTYKH.swiftd, "");
+		strcpy(stDTYKH.jhhh_u, "");
+		strcpy(stDTYKH.lhhh_u, "");
+		strcpy(stDTYKH.xtnwlm, "");
+		strcpy(stDTYKH.jshkhh, "");
+		strcpy(stDTYKH.jshmc_, "");
+		strcpy(stDTYKH.jshdz_, "");
+		strcpy(stDTYKH.khjszh, "");
+		strcpy(stDTYKH.fwddaq, "");
+		strcpy(stDTYKH.cpabaq, "");
+		strcpy(stDTYKH.chuidq, "");
+		strcpy(stDTYKH.ssqybz, "");
+		//strcpy(stDTYKH.jyfw_u, "");
+		//strcpy(stDTYKH.frdblb, "");
+		//strcpy(stDTYKH.frdb_u, "");
+		//strcpy(stDTYKH.frjmsx, "");
+		//strcpy(stDTYKH.frzjzl, "");
+		strcpy(stDTYKH.frdbkh, "");
+		//strcpy(stDTYKH.frzjyx, "");
+		//strcpy(stDTYKH.frdbdh, "");
+		//strcpy(stDTYKH.sjzgmc, "");
+		//strcpy(stDTYKH.sjzglx, "");
+		//strcpy(stDTYKH.sdwzzm, "");
+		//strcpy(stDTYKH.sdwfrm, "");
+		//strcpy(stDTYKH.khjmsx, "");
+		//strcpy(stDTYKH.sfrzjl, "");
+		//strcpy(stDTYKH.sfrzjh, "");
+		strcpy(stDTYKH.sfrkhh, "");
+
+		//strcpy(stDTYKH.sfrdhh, "");
+		//strcpy(stDTYKH.dkkbh_, "");
+		//strcpy(stDTYKH.sfgdkh, "");
+		//stDTYKH.khcgs_ = 0;
+		//strcpy(stDTYKH.gjzh_u, "");
+		strcpy(stDTYKH.sfgldw, "");
+		strcpy(stDTYKH.gxbs_u, "");
+		strcpy(stDTYKH.khjzxx, "");
+		//strcpy(stDTYKH.cxmm_u, "");
+		//strcpy(stDTYKH.khjf_u, "");
+		//strcpy(stDTYKH.khxyd_, "");
+		//strcpy(stDTYKH.wbxydj, "");
+		//strcpy(stDTYKH.khfxjb, "");
+		strcpy(stDTYKH.khfwjb, "");
+		//strcpy(stDTYKH.khgxd_, "");
+		//strcpy(stDTYKH.shifms, "");
+		//strcpy(stDTYKH.slgb_u, "");
+		//stDTYKH.lxssl_ = 0;
+		//strcpy(stDTYKH.slyxrq, "");
+		
+		strcpy(stDTYKH.sfcszd, "");
+		strcpy(stDTYKH.hbdh_u, "");
+		strcpy(stDTYKH.sfkhcx, "");
+		strcpy(stDTYKH.sfsmkh, "");
+		strcpy(stDTYKH.sfdjbz, "");
+		strcpy(stDTYKH.sfswbz, "");
+		strcpy(stDTYKH.sfhcbz, "");
+		strcpy(stDTYKH.ywfyj_, "");
+		strcpy(stDTYKH.khsdbz, "");
+		strcpy(stDTYKH.khqcbz, "");
+	
+		//strcpy(stDTYKH.hmdbz_, "");    /** begin jinjt **/
+		//strcpy(stDTYKH.huimdb, "");
+		//strcpy(stDTYKH.wgbz_u, "");
+		//strcpy(stDTYKH.khyxzt, "");
+		//strcpy(stDTYKH.khzt_u, "");	   /** end **/
+
+		strcpy(stDTYKH.khzt_u, "");
+		strcpy(stDTYKH.bzxx_u, "");
+		strcpy(stDTYKH.shnxrq, "");
+		strcpy(stDTYKH.khxxly, "");
+		strcpy(stDTYKH.wwktyw, "");
+		strcpy(stDTYKH.gsjg_u, "");
+		strcpy(stDTYKH.yxr_uu, "");
+		//strcpy(stDTYKH.yxrm_u, "");		//jinjt
+		strcpy(stDTYKH.yxjg_u, "");
+		strcpy(stDTYKH.khrq_u, "");
+		stDTYKH.khsj_u = 0;
+		strcpy(stDTYKH.khgyls, "");
+		strcpy(stDTYKH.khjg_u, "");
+		strcpy(stDTYKH.khgy_u, "");
+		strcpy(stDTYKH.sqgy_u, "");
+		strcpy(stDTYKH.fqqd_u, "");
+		strcpy(stDTYKH.whrq_u, "");
+		stDTYKH.whsj_u = 0;
+		strcpy(stDTYKH.whgy_u, "");
+		strcpy(stDTYKH.whjg_u, "");
+		strcpy(stDTYKH.whsqgy, "");
+		strcpy(stDTYKH.whgyls, "");
+		strcpy(stDTYKH.whqd_u, "");
+		strcpy(stDTYKH.scjyr_, "");
+		strcpy(stDTYKH.bybz1_, "");
+		strcpy(stDTYKH.bybz2_, "");
+		strcpy(stDTYKH.byzd4w, "");
+		strcpy(stDTYKH.byzd40, "");
+		strcpy(stDTYKH.ylzd1_, "");
+		strcpy(stDTYKH.byzd1_, "");
+		strcpy(stDTYKH.byzd4_, "");
+		stDTYKH.sjc_uu = 0;
+		strcpy(stDTYKH.jlzt_u, "0");
+		
+		strcpy(stDZJXX.frdm_u, sFRDM_U);
+		strcpy(stDZJXX.khbh_u, stDTYKH.khbh_u);
+		strcpy(stDZJXX.khlx_u, "00");
+		strcpy(stDZJXX.khzwm_, stDTYKH.khzwm_);
+		strcpy(stDZJXX.zjzl_u, stDTYKH.zmwjzl);
+		strcpy(stDZJXX.zjzlms, stDTYKH.zbjg_u);			/** stDTYKH.ZJZLMS -> stDTYKH.ZBJG_U **/
+		strcpy(stDZJXX.zmwjbh, stDTYKH.zmwjbh);
+		strcpy(stDZJXX.qfrq_u, "");
+		strcpy(stDZJXX.zjyxq_, "");
+		strcpy(stDZJXX.shixrq, "");
+		strcpy(stDZJXX.dqdm_u, "");
+		strcpy(stDZJXX.ssdqdm, "");
+		strcpy(stDZJXX.ssdq_u, "");
+		strcpy(stDZJXX.fzjggj, "");
+		strcpy(stDZJXX.fzjg_u, "");
+		strcpy(stDZJXX.zjdjdz, "");
+		strcpy(stDZJXX.ywdz_u, "");
+		strcpy(stDZJXX.fzh1sm, "");
+		strcpy(stDZJXX.zjfzh1, "");
+		strcpy(stDZJXX.fzh2sm, "");
+		strcpy(stDZJXX.zjfzh2, "");
+		strcpy(stDZJXX.fzh3sm, "");
+		strcpy(stDZJXX.zjfzh3, "");
+		strcpy(stDZJXX.zxxbz_, "");
+		strcpy(stDZJXX.khyxzj, "");
+		strcpy(stDZJXX.bssfzj, "");
+		strcpy(stDZJXX.sm_uuu, "");
+		strcpy(stDZJXX.byzd1_, "");
+		strcpy(stDZJXX.jyrq_u, "");
+		stDZJXX.jysj_u = 0;	
+		strcpy(stDZJXX.jygy_u, "");
+		strcpy(stDZJXX.jyjg_u, "");
+		strcpy(stDZJXX.sqgy_u, "");
+		strcpy(stDZJXX.gylshm, "");
+		strcpy(stDZJXX.fqqd_u, "");
+		strcpy(stDZJXX.whrq_u, "");
+		stDZJXX.whsj_u = 0;
+		strcpy(stDZJXX.whgy_u, "");
+		strcpy(stDZJXX.whjg_u, "");
+		strcpy(stDZJXX.whsqgy, "");
+		strcpy(stDZJXX.whgyls, "");
+		strcpy(stDZJXX.whqd_u, "");
+		strcpy(stDZJXX.scjyr_, "");
+		stDZJXX.sjc_uu = 0;
+		strcpy(stDZJXX.jlzt_u, "0");
+    	
+
+    	printDTYKH(stDTYKH,sYYJG_U);
+		printDZJXX(stDZJXX,sYYJG_U);
+		
+		j++;
+    }
+
+	/*=====================User Code End=====================*/
+	return iResult;
+ 
+}
+

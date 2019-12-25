@@ -1,0 +1,942 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "public.h"
+#define DFN_DDKZK
+#define DFN_ZCZXX
+#define DFN_ZDKFH
+#define DFN_DDKTZ
+#define DFN_DDKJX
+#define DFN_DDKFK
+#define DFN_DDKHK
+#define DFN_DDKFJ
+#define DFN_DDKXT
+#define DFN_DTJXX
+#define DFN_DZLXX
+#define DFN_DQGJH
+#define DFN_DDKDQ
+#define DFN_ZZHMX
+#define DFN_DDKED
+#include "zczxx.h"
+#include "zdkfh.h"
+#include "ddkzk.h"
+#include "ddktz.h"
+#include "ddkjx.h"
+#include "ddkfk.h"
+#include "ddkhk.h"
+#include "ddkfj.h"
+#include "ddkxt.h"
+#include "dtjxx.h"
+#include "dzlxx.h"
+#include "dqgjh.h"
+#include "ddkdq.h"
+#include "zzhmx.h"
+#include "ddked.h"
+
+/*
+缺少 ddkdb 登记薄,请增加 
+
+*/
+
+typedef struct
+{
+    char sYSYWZL[YSYWZL_SIZE+1];     /*衍生业务种类: 1-贴现垫款, 2-银承垫款, 3-法人透支, 4-个人透支, 9-其它业务*/
+    char sGLYWH1[GLYWH1_SIZE+1];     /*关联业务编号*/
+    char sKHBH_U[KHBH_U_SIZE+1];     /*客户号*/
+    char sHTH_UU[HTH_UU_SIZE+1];     /*合同编号*/
+    char sRZJG_U[RZJG_U_SIZE+1];     /*入账机构*/
+    char sQUXRQ_[QUXRQ__SIZE+1];     /*起息日期*/
+    char sDQRQ_U[DQRQ_U_SIZE+1];     /*到期日期*/
+    double dHTJE_U;                 /*合同金额*/
+    double dJJJE_U;                 /*借据金额*/
+    double dZXLL_U;                 /*执行利率*/
+    double dYSYJFX;                 /*应计利息->应计罚息*/
+    double dYSQX_U;                 /*应收欠息*/
+    char sNYLL_U[NYLL_U_SIZE+1];     /*利率年月标识*/
+    char sHBDH_U[HBDH_U_SIZE+1];     /*货币代号*/
+    char sHKZH_U[HKZH_U_SIZE+1];     /*还款帐号*/
+} BLNDianKuanKaihu_IN;
+
+typedef struct
+{
+	char sDKJJBM[DKJJBM_SIZE+1];     /*贷款借据号*/
+	char sDKZH_U[DKZH_U_SIZE+1];     /*贷款账号*/
+
+} BLNDianKuanKaihu_OUT;
+
+/********************
+	argv[1] 为法人代码
+	argv[2] 为机构代码
+	argv[3] 为数据量  
+********************/
+//int BLNDianKuanKaihu_CrtZdkfh(BLNDianKuanKaihu_IN stDianKuan_IN,BLNDianKuanKaihu_OUT *stDianKuan_OUT,int i,TBL_DDKZK *stDDKZK,TBL_ZDKFH *stZDKFH,TBL_DDKTZ *stDDKTZ,TBL_DDKJX *stDDKJX,TBL_DDKFK *stDDKFK,TBL_DDKHK *stDDKHK,TBL_DDKFJ *stDDKFJ,TBL_DDKXT *stDDKXT,TBL_DTJXX *stDTJXX,TBL_DZLXX *stDZLXX,TBL_DQGJH *stDQGJH,TBL_DDKDQ *stDDKDQ,TBL_ZZHMX *stZZHMX,TBL_DDKED *stDDKED);
+int BLNDianKuanKaihu_CrtZdkfh(BLNDianKuanKaihu_IN stDianKuan_IN,BLNDianKuanKaihu_OUT *stDianKuan_OUT,int i);
+int printDDKZK(TBL_DDKZK stDDKZK,char *sYYJG_U);
+int printZDKFH(TBL_ZDKFH stZDKFH,char *sYYJG_U);
+int printDDKTZ(TBL_DDKTZ stDDKTZ,char *sYYJG_U);
+int printDDKJX(TBL_DDKJX stDDKJX,char *sYYJG_U);
+int printDDKFK(TBL_DDKFK stDDKFK,char *sYYJG_U);
+int printDDKHK(TBL_DDKHK stDDKHK,char *sYYJG_U);
+int printDDKFJ(TBL_DDKFJ stDDKFJ,char *sYYJG_U);
+int printDDKXT(TBL_DDKXT stDDKXT,char *sYYJG_U);
+int printDTJXX(TBL_DTJXX stDTJXX,char *sYYJG_U);
+int printDZLXX(TBL_DZLXX stDZLXX,char *sYYJG_U);
+int printDQGJH(TBL_DQGJH stDQGJH,char *sYYJG_U);
+int printDDKDQ(TBL_DDKDQ stDDKDQ,char *sYYJG_U);
+int printZZHMX_FORZDKFH(TBL_ZZHMX stZZHMX,char *sYYJG_U);
+int printDDKED(TBL_DDKED stDDKED,char *sYYJG_U);
+
+	TBL_DDKZK stDDKZK;
+	TBL_ZDKFH stZDKFH;
+	TBL_DDKTZ stDDKTZ;
+	TBL_DDKJX stDDKJX;
+	TBL_DDKFK stDDKFK;
+	TBL_DDKHK stDDKHK;
+	TBL_DDKFJ stDDKFJ;
+	TBL_DDKXT stDDKXT;
+	TBL_DTJXX stDTJXX;
+	TBL_DZLXX stDZLXX;
+	TBL_DQGJH stDQGJH;
+	TBL_DDKDQ stDDKDQ;
+	TBL_ZZHMX stZZHMX;	
+	TBL_DDKED stDDKED;
+
+int main(int argc, char *argv[])
+{
+
+	
+	char	sYYJG_U[YYJG_U_SIZE+1];
+	int		iResult = SUCCESS;
+	int 	i = 0;
+	
+	EXEC SQL BEGIN DECLARE SECTION;
+        char sZHKHJG[ZHKHJG_SIZE+1]="";          /*账户开户机构*/
+        char sFRDM_U[FRDM_U_SIZE+1]="";            /*法人代码*/
+		char    sSOPAPDBS[20];              /*  当前数据库  */
+		TBL_ZCZXX stZCZXX;
+  EXEC SQL END DECLARE SECTION;
+ 
+	memset(sFRDM_U, 0, sizeof(sFRDM_U));
+	memset(sYYJG_U, 0, sizeof(sYYJG_U));
+
+
+  
+	strcpy(sFRDM_U, argv[1]);
+	strcpy(sYYJG_U, argv[2]);
+ 
+	/*====================User Code Begin====================*/
+   
+    #ifdef SOP_INFORMIX
+    strcpy(sSOPAPDBS,getenv("ORACLE_SID"));
+    EXEC SQL DATABASE :sSOPAPDBS;
+    EXEC SQL set lock mode to wait 10;
+    #endif
+    //#ifdef SOP_ORACLE
+    strcpy(sSOPAPDBS,getenv("DB_USER"));
+    strcat(sSOPAPDBS,"/");
+    strcat(sSOPAPDBS,getenv("DB_PASSWD"));
+    EXEC SQL connect :sSOPAPDBS;
+    //#endif
+    #ifdef SOP_DB2
+    sprintf(sSOPAPDBS, "%s", getenv("SOP_DBNAME"));
+    EXEC SQL CONNECT TO :sSOPAPDBS;
+    #endif
+
+    if( SQL_ERR )
+    {
+        printf("open database error!!![%d]",SQLCODE);
+        iResult = FAIL;
+        goto Err_exit;
+    }
+	
+  	strcpy(sFRDM_U,argv[1]);                /* 法人代码 */
+  	strcpy(sZHKHJG,argv[2]);                /*账户开户机构*/
+  	BLNDianKuanKaihu_IN  In_BLNDianKuan;
+  	BLNDianKuanKaihu_OUT Out_BLNDianKuan;
+
+
+
+ 	printf("sFRDM_U is [%s], sYYJG_U is [%s]\n", sFRDM_U, sZHKHJG); 
+	EXEC SQL DECLARE cur_crtzdkfh cursor FOR SELECT * FROM ZCZXX WHERE frdm_u =:sFRDM_U AND zhkhjg=:sZHKHJG AND zhhubz='01' AND zhckqx='0D';
+	EXEC SQL OPEN cur_crtzdkfh;
+	if(SQL_ERR)
+  	{
+      EXEC SQL close cur_crtzdkfh;
+	  printf("打开游标错误,SQLCODE===[%d]",SQLCODE);
+      goto ERR_QUIT;
+  	}
+
+	for(i = 0; i<atol(argv[3]); i++)
+	{
+	  	memset((char *)&stZCZXX, 0, sizeof(stZCZXX));
+	  
+		EXEC SQL FETCH cur_crtzdkfh INTO :stZCZXX;
+		if(SQL_ERR)
+    	{
+	  		printf("FETCH 游标,SQLCODE===[%d]",SQLCODE);
+        	if(SQL_NOTFOUND != SQLCODE)
+        	{ 
+            	EXEC SQL close cur_crtzdkfh;
+            	goto ERR_QUIT;
+        	}
+    	}
+
+		memset((char *)&In_BLNDianKuan,0,sizeof(In_BLNDianKuan));
+		memset((char *)&Out_BLNDianKuan,0,sizeof(Out_BLNDianKuan));
+
+		memset(&stDDKZK, 0, sizeof(stDDKZK));
+		memset(&stZDKFH, 0, sizeof(stZDKFH));
+		memset(&stDDKTZ, 0, sizeof(stDDKTZ));
+		memset(&stDDKJX, 0, sizeof(stDDKJX));
+		memset(&stDDKFK, 0, sizeof(stDDKFK));
+		memset(&stDDKHK, 0, sizeof(stDDKHK));
+		memset(&stDDKFJ, 0, sizeof(stDDKFJ));
+		memset(&stDDKXT, 0, sizeof(stDDKXT));
+		memset(&stDTJXX, 0, sizeof(stDTJXX));
+		memset(&stDZLXX, 0, sizeof(stDZLXX));
+		memset(&stDQGJH, 0, sizeof(stDQGJH));
+		memset(&stDDKDQ, 0, sizeof(stDDKDQ));
+		memset(&stDDKED, 0, sizeof(stDDKED));
+
+        printf("==============================!!![%s,%s]",stZCZXX.glkhbh,stZCZXX.khzh_u);
+
+		strcpy(In_BLNDianKuan.sYSYWZL,"2");
+		strcpy(In_BLNDianKuan.sGLYWH1,"XXXXXXX");	/* 此处可随便填 */
+		strcpy(In_BLNDianKuan.sKHBH_U,stZCZXX.glkhbh);	/* 客户号 */
+		strcpy(In_BLNDianKuan.sRZJG_U,sZHKHJG);
+		//strcpy(In_BLNDianKuan.sQUXRQ_,"");
+		//strcpy(In_BLNDianKuan.sDQRQ_U,sJYRQ_U);
+		In_BLNDianKuan.dZXLL_U = 5.6;						/* 执行利率 */
+		In_BLNDianKuan.dHTJE_U = 100000;			/* 合同金额 */
+		In_BLNDianKuan.dJJJE_U = 100000;				/* 贷款金额 */
+		strcpy(In_BLNDianKuan.sHBDH_U,"01");		/* 贷款币种 */
+		strcpy(In_BLNDianKuan.sHKZH_U,stZCZXX.khzh_u);	/* 此处为贷款还款账号 */
+		
+		/**if (FAIL == BLNDianKuanKaihu_CrtZdkfh(In_BLNDianKuan,&Out_BLNDianKuan,i,&stDDKZK,&stZDKFH,&stDDKTZ,&stDDKJX,&stDDKFK,&stDDKHK,&stDDKFJ,&stDDKXT,&stDTJXX,&stDZLXX,&stDQGJH,&stDDKDQ,&stZZHMX,&stDDKED))
+			return FAIL;**/
+		if (FAIL == BLNDianKuanKaihu_CrtZdkfh(In_BLNDianKuan,&Out_BLNDianKuan,i))
+			return FAIL;
+
+
+ 		printf("写文件 begin i===[%d]\n",i+1); 
+			printDDKZK(stDDKZK,sZHKHJG);
+			printZDKFH(stZDKFH,sZHKHJG);
+			printDDKTZ(stDDKTZ,sZHKHJG);
+			printDDKJX(stDDKJX,sZHKHJG);
+			printDDKFK(stDDKFK,sZHKHJG);
+			printDDKHK(stDDKHK,sZHKHJG);
+			printDDKFJ(stDDKFJ,sZHKHJG);
+			printDDKXT(stDDKXT,sZHKHJG);
+			printDTJXX(stDTJXX,sZHKHJG);
+			printDZLXX(stDZLXX,sZHKHJG);
+			printDQGJH(stDQGJH,sZHKHJG);
+			printDDKDQ(stDDKDQ,sZHKHJG);
+			printZZHMX_FORZDKFH(stZZHMX,sZHKHJG);
+			printDDKED(stDDKED,sZHKHJG);
+ 		printf("写文件 end i===[%d]\n",i+1); 
+	}
+
+ERR_QUIT:
+     EXEC SQL close cur_crtzdkfh;
+
+	/*=====================User Code End=====================*/
+Err_exit:
+	return iResult;
+ 
+}
+
+/***
+int BLNDianKuanKaihu_CrtZdkfh(BLNDianKuanKaihu_IN stDianKuan_IN,		
+							  BLNDianKuanKaihu_OUT *stDianKuan_OUT,
+							  int i,
+							  TBL_DDKZK stDDKZK,
+							  TBL_ZDKFH stZDKFH,
+							  TBL_DDKTZ stDDKTZ,
+							  TBL_DDKJX stDDKJX,
+							  TBL_DDKFK stDDKFK,
+							  TBL_DDKHK stDDKHK,
+							  TBL_DDKFJ stDDKFJ,
+							  TBL_DDKXT stDDKXT,
+							  TBL_DTJXX stDTJXX,
+							  TBL_DZLXX stDZLXX,
+							  TBL_DQGJH stDQGJH,
+							  TBL_DDKDQ stDDKDQ,
+							  TBL_ZZHMX stZZHMX,
+							  TBL_DDKED stDDKED)	****/	
+int BLNDianKuanKaihu_CrtZdkfh(BLNDianKuanKaihu_IN stDianKuan_IN,		
+							  BLNDianKuanKaihu_OUT *stDianKuan_OUT,
+							  int i)		
+{
+		
+	EXEC SQL BEGIN DECLARE SECTION;
+        char sZWJG_U[ZWJG_U_SIZE+1]="";          /*账户开户机构*/
+        long     inum = 0;
+  	EXEC SQL END DECLARE SECTION;
+		
+    char sDKZH_U[DKZH_U_SIZE + 1];
+
+    memset(sDKZH_U, 0 ,sizeof(sDKZH_U));
+    
+    strcpy(sZWJG_U,stDianKuan_IN.sRZJG_U);   
+    EXEC SQL select count(*) into :inum from zdkfh where  ZWJG_U = :sZWJG_U;
+    sprintf(sDKZH_U,"%s%s%08d",sZWJG_U,stDianKuan_IN.sHBDH_U,inum+1+i);
+	//memset(&ddkzk.stDDKZK,0,sizeof(ddkzk.stDDKZK));
+
+
+	strcpy(stDDKZK.frdm_u,"9999");
+	strcpy(stZDKFH.frdm_u,"9999");
+	strcpy(stDDKTZ.frdm_u,"9999");
+	strcpy(stDDKJX.frdm_u,"9999");
+	strcpy(stDDKFK.frdm_u,"9999");
+	strcpy(stDDKHK.frdm_u,"9999");
+	strcpy(stDDKFJ.frdm_u,"9999");
+	strcpy(stDDKXT.frdm_u,"9999");
+	strcpy(stDTJXX.frdm_u,"9999");
+	strcpy(stDZLXX.frdm_u,"9999");
+	strcpy(stDQGJH.frdm_u,"9999");
+	strcpy(stDDKDQ.frdm_u,"9999");
+	strcpy(stDDKED.frdm_u,"9999");
+
+		
+	strcpy(stZZHMX.frdm_u,"9999");
+	strcpy(stZZHMX.zh_uuu,sDKZH_U);
+	strcpy(stZZHMX.zhyyjg,stDianKuan_IN.sRZJG_U);
+	strcpy(stZZHMX.zhkjjg,stDianKuan_IN.sRZJG_U);
+	strcpy(stZZHMX.hbdh_u,"01");
+	strcpy(stZZHMX.mk_uuu,"LN");
+	strcpy(stZZHMX.whjg_u,stDianKuan_IN.sRZJG_U);
+	strcpy(stZZHMX.whrq_u,"20160324");
+	strcpy(stZZHMX.jlzt_u,"0");
+
+
+
+
+	
+
+    if(stDianKuan_IN.sKHBH_U[1] == '1')    /*对私*/
+    {
+    	 
+    	 	strcpy(stDDKZK.dkjjbm, sDKZH_U);         //贷款借据号
+    		strcpy(stDDKZK.dkdx_u, "1");                 //贷款对象
+    		strcpy(stDDKZK.cndk_u, "0");                 //承诺贷款
+    		strcpy(stDDKZK.xhdkbz, "0");                 //循环贷款
+    		strcpy(stDDKZK.lhdk_u, "0");                 //联合贷款
+    		strcpy(stDDKZK.ysdk_u, "0");                 //衍生贷款
+    		strcpy(stDDKZK.dldk_u, "0");                 //代理贷款
+    		strcpy(stDDKZK.ayjfyj, "1");                 //按应计非应计核算
+    		strcpy(stDDKZK.ayyldh, "1");                 //按一逾两呆核算
+    		strcpy(stDDKZK.dkxtfk, "1");                 //贷款形态分科目核算
+    		strcpy(stDDKZK.jlzt_u, "0");                          //记录状态
+
+
+		strcpy(stDDKED.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKED.syed_u, "0");                 /*是否使用额度*/
+    		strcpy(stDDKED.sydkcn, "0");                 /*使用贷款承诺*/
+    		strcpy(stDDKED.edbzgz, "");                 /*额度币种规则*/
+    		strcpy(stDDKED.edzdbz, "");                 /*额度指定币种*/
+    		strcpy(stDDKED.edsygz, "");                 /*额度使用规则*/
+    		stDDKED.edsybl = 100;                                 /*额度使用比例*/
+    		strcpy(stDDKED.sydkcn, "0");                          /*使用贷款承诺:否*/
+    		strcpy(stDDKED.gljjbz, "0");                          /*关联借据标志:否*/
+    		strcpy(stDDKED.jlzt_u, "0");                          /*记录状态*/
+
+    		
+    		
+    		
+    		
+    		strcpy(stDDKFK.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKFK.dkrzzh, stDianKuan_IN.sHKZH_U);         /*贷款入帐帐号*/
+    		strcpy(stDDKFK.ajxmbh, "");                           /*按揭项目编号*/
+    		strcpy(stDDKFK.ajxmmc, "");                           /*按揭项目名称*/
+    		strcpy(stDDKFK.mfkhh_, "");                           /*开发商客户号*/
+    		strcpy(stDDKFK.mfkhm_, "");                           /*开发商客户名*/
+    		strcpy(stDDKFK.mfzh_u, "");                           /*开发商帐号*/
+    		strcpy(stDDKFK.zqxfk_, "0");                 					/*周期性放款*/
+    		strcpy(stDDKFK.fkzq_u, "");                 					/*放款周期*/
+    		strcpy(stDDKFK.fkfsbm, "");                 					/*放款方式*/
+    		stDDKFK.mcfkje = 0;                        						/*每次放款金额*/
+    		strcpy(stDDKFK.dzfkjh, "0");                          /*定制放款计划*/
+    		strcpy(stDDKFK.scfkr_, "");                           /*上次放款日*/
+    		strcpy(stDDKFK.jxhjyd, "1");                 /*借新还旧原贷款控制*/
+    		strcpy(stDDKFK.jxhjhk, "1");                 /*借新还旧还款控制*/
+    		//strcpy(stDDKFK.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKFK.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKFK.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDDKJX.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKJX.jxgz_u, "00");                 /*计息规则*/
+    		strcpy(stDDKJX.lllx_u, "2");                 /* 利率类型 */
+    		strcpy(stDDKJX.ltjxgz, "1");                 /*零头计息规则*/
+    		strcpy(stDDKJX.llfd_u, "0");                          /*利率分段*/
+    		stDDKJX.zxll_u= 5.6;                         /*利率*/
+    		strcpy(stDDKJX.whllzl, "");                 /*外汇利率种类*/
+    		strcpy(stDDKJX.whllqx, "");                 /*外汇利率浮动种类*/
+    		strcpy(stDDKJX.kxyqgz, "1");                 /* 宽限期转逾期规则 */
+    		strcpy(stDDKJX.nyll_u, "Y");                 /*年/月利率*/
+    		stDDKJX.zxll_u = 5.6;                /*利率*/
+    		strcpy(stDDKJX.lltzfs, "2");                 /*利率调整方式*/
+    		strcpy(stDDKJX.lltzzq, "1YA0101");                 /*利率调整周期*/
+    		strcpy(stDDKJX.llfdfs, "2");                 /*利率浮动方式*/
+    		stDDKJX.llfdz_ = 0.00;                        /*利率浮动值*/
+    		strcpy(stDDKJX.zcllbh, "D01");                 /*正常利率编号*/
+    		strcpy(stDDKJX.ysxfs_, "0");                 /*预收息方式*/
+    		strcpy(stDDKJX.lxtxzq, "");                 /*利息摊消周期*/
+    		strcpy(stDDKJX.mctxfs, "2");                 /*每次摊消方式*/
+    		stDDKJX.mctxbl = 0.00;                        /*每次摊消比例*/
+    		//stDDKJX.ysxze_ = stDDKJX.ysxze_;                        /*预收息总额*/
+    		
+    		strcpy(stDDKJX.ysxfs_, "0");                 /*预收息方式*/
+    		strcpy(stDDKJX.mctxfs, "2");                 /*每次摊消方式*/
+    		stDDKJX.mctxbl = 0.00;                        /*每次摊消比例*/
+    		//stDDKJX.kxq_uu = CJXSX_KXQ_UU;                        /*宽限期*/
+    		strcpy(stDDKJX.kxsxgz, "1");                 /*宽限期收息规则*/
+    		strcpy(stDDKJX.kxjrgz, "1");                 /*宽限期节假日规则*/
+    		strcpy(stDDKJX.yxycdd, "0");                 /*允许以存抵贷*/
+    		strcpy(stDDKJX.jx_uuu, "0");                 /*计息*/
+    		strcpy(stDDKJX.jfx_uu, "0");                 /*计复息*/
+    		strcpy(stDDKJX.fxjx_u, "0");                 /*复息计息*/
+    		strcpy(stDDKJX.txbzdm, "0");                          /*停息标志*/
+    		strcpy(stDDKJX.yqjxfs, "2");                 /*逾期计息方式*/
+    		strcpy(stDDKJX.yqllbh, "");                 /*逾期利率编号*/
+    		strcpy(stDDKJX.yqfxfs, "2");                 /*逾期罚息浮动方式*/
+    		stDDKJX.yqfxfd = 50;                        /*逾期罚息浮动值*/
+    		strcpy(stDDKJX.yqnyll, "Y");                 /*逾期年月利率*/
+    		stDDKJX.zdyqll = 50;                        /*逾期利率*/
+    		strcpy(stDDKJX.txbzw_, "0");                          /*贴息标志*/
+    		strcpy(stDDKJX.sctxr_, "20160324");         /*上次调息日 = 起息日期 */
+    		//stDDKJX.lltzzq
+    		strcpy(stDDKJX.lxtxzq, "1YA0101");   
+    		
+    		strcpy(stDDKJX.scjxr_, "20160324");                      /*上次结息日 */
+    		//strcpy(stDDKJX.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKJX.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKJX.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		
+    		strcpy(stDDKHK.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKHK.hkfs_u, "3");                 /*还款方式*/
+    		
+    		if (0 == strcmp(stDDKHK.hkfs_u,"3"))
+    		    strcpy(stDDKHK.declgz, "1");                      /*等额处理规则    */
+    		
+    		strcpy(stDDKHK.qxbgjh, "0");                 /*期限变更调整计划*/
+    		strcpy(stDDKHK.llbgjh, "0");                 /*利率变更调整计划*/
+    		strcpy(stDDKHK.dcfkjh, "0");                 /*多次放款调整计划*/
+    		stDDKHK.sylxlv = 0;                                   /*顺延利息*/
+    		stDDKHK.ljz_uu = 0;                        /*累进额度*/
+    		stDDKHK.ljqjqs = 0;                        /*累进区间期数*/
+    		strcpy(stDDKHK.hkzq_u, "1MA21");                 /*还款周期*/
+    		strcpy(stDDKHK.dplhk_, "0");                 /*多频率还款*/
+    		strcpy(stDDKHK.hbzq_u, "");                  /*还本周期*/
+    		strcpy(stDDKHK.yqhkzq, "");                  /*逾期还款周期*/
+    		
+    		stDDKHK.bqzqs_ = 1000;                       /*本期子期数*/
+    		stDDKHK.sylxlv = 0;                                   /*顺延利息*/
+    		strcpy(stDDKHK.schkr_, "20160324");         /*上次还款日*/
+    		strcpy(stDDKHK.hkqx_u, "12M");         /*还款期限*/
+    		stDDKHK.blje_u = 0;                                   /*保留金额*/
+    		stDDKHK.mqhkze = 0;                                   /*每期还款总额*/
+    		stDDKHK.mqhbje = 0;                                   /*每期还本金额*/
+    		strcpy(stDDKHK.bjfd_u, "0");                          /*本金分段*/
+    		strcpy(stDDKHK.dzhkjh, "0");                          /*定制还款计划*/
+    		
+    		stDDKHK.zqs_uu = 12;
+    		
+    		
+    		stDDKHK.bqqs_u = 1;                                   /*本期期数*/
+    		stDDKHK.jxzqs_ = stDDKHK.zqs_uu;                        /*计息总期数*/
+    		stDDKHK.jxqs_u = 1;                                   /*计息期数*/
+    		stDDKHK.jxbj_u = 100000;                              /*计息本金*/
+    		stDDKHK.dqbjds = 0;                                   /*当前本金段数*/
+    		strcpy(stDDKHK.hksxxh, "LNKKSX001");                 /*还款顺序编号*/
+    		strcpy(stDDKHK.yxtqhk, "1");                 /*允许提前还款*/
+    		strcpy(stDDKHK.tqhkhx, "3");                 /*提前还款是否还息*/
+    		strcpy(stDDKHK.thkhtx, "0");                 /*提前还款是否还贴息*/
+    		strcpy(stDDKHK.tqhkcd, "0");                 /*提前还款冲抵逾期本息*/
+    		stDDKHK.ytqhkj = 0;                                   /*已提前还款金额*/
+    		strcpy(stDDKHK.tqhkjh, "0");                 /*提前还款是否调整还款计划*/
+    		strcpy(stDDKHK.zdkk_u, "1");                 /*自动扣款*/
+    		strcpy(stDDKHK.zdjqdk, "1");                 /*自动结清贷款*/
+    		strcpy(stDDKHK.dghkzh, "0");                          /*多个还款帐号 0-否*/
+    		
+    		strcpy(stDDKHK.hkzh_u, stDianKuan_IN.sHKZH_U);     /*还款帐号*/
+    		strcpy(stDDKHK.qyxhdk, "0");                          /*签约循环贷款:0-否*/
+    		//strcpy(stDDKHK.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stDDKHK.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDDKDQ.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKDQ.dqkxgz, "1");                 /*到期扣息规则*/
+    		strcpy(stDDKDQ.yxdkzq, "0");                 /*允许贷款展期*/
+    		strcpy(stDDKDQ.zqxzek, "0");                 /*展期需足额扣款*/
+    		stDDKDQ.zqzdcs = 3;                        /*展期最大次数*/
+    		strcpy(stDDKDQ.zqgzbh, "");                 /*展期控制编号*/
+    		stDDKDQ.yzqcs_ = 0;                                   /*已展期次数*/
+    		strcpy(stDDKDQ.ydkdqr, "20170324");         /*原贷款到期日*/
+    		//strcpy(stDDKDQ.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKDQ.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKDQ.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		
+    		
+    		strcpy(stDDKXT.dkjjbm, sDKZH_U);         /* 贷款借据号   */
+    		strcpy(stDDKXT.zdxtzy, "1");                 /* 自动处理:1-是 */
+    		strcpy(stDDKXT.lxzcgz, "1");                 /* 利息转出规则:2-全部转出 */
+    		strcpy(stDDKXT.lxzhgz, "1");                 /* 利息转回规则 */
+    		strcpy(stDDKXT.xtzybh, "9999");                 /* 形态转移编号 */
+    		//strcpy(stDDKXT.whgy_u, sJYGY_U);                      /* 维护柜员 */
+    		//strcpy(stDDKXT.whrq_u, sJYRQ_U);                      /* 维护日期 */
+    		strcpy(stDDKXT.jlzt_u, "0");                          /* 记录状态:0-正常*/
+    		
+    		
+    		
+    		strcpy(stDDKFJ.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKFJ.hkfjbh, "");                 /*提前还款罚金编号*/
+    		strcpy(stDDKFJ.hkfjmc, "");                 /*提前还款罚金名称*/
+    		stDDKFJ.hkfjje = 0;                                   /*提前还款附加罚金金额*/
+    		strcpy(stDDKFJ.yqfjbh, "");                 /*逾期还款罚金编号*/
+    		strcpy(stDDKFJ.yqfjmc, "");                 /*逾期还款罚金名称*/
+    		stDDKFJ.yqfjfj = 0;                                   /*逾期还款附加罚金金额*/
+    		//strcpy(stDDKFJ.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKFJ.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKFJ.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDDKTZ.dkjjbm, sDKZH_U);       /*贷款借据号*/
+    		strcpy(stDDKTZ.zctqtz, "0");                 /*正常提前通知*/
+    		stDDKTZ.tqts_u= 0;                         /*提前天数*/
+    		strcpy(stDDKTZ.yqcstz, "0");                 /*逾期催收通知*/
+    		stDDKTZ.tzjgts= 0;                         /*通知间隔天数*/
+    		strcpy(stDDKTZ.xctzrq ,"18991231");
+    		strcpy(stDDKTZ.llbgtz, "0");                 /*利率变更通知*/
+    		strcpy(stDDKTZ.yebgtz, "0");                 /*余额变更通知*/
+    		strcpy(stDDKTZ.khhddy, "0");                 /*客户回单打印*/
+    		//strcpy(stDDKTZ.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKTZ.whrq_u, sJYRQ_U);                      /*维护柜员*/
+    		strcpy(stDDKTZ.jlzt_u, "0");                          /*记录状态*/
+    		
+   		  	strcpy(stZDKFH.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stZDKFH.dkzh_u, sDKZH_U);                      /*贷款账号*/
+    		strcpy(stZDKFH.hth_uu, sDKZH_U);         /*合同编号*/
+    		strcpy(stZDKFH.khbh_u, stDianKuan_IN.sKHBH_U);         /*客户号*/
+    		strcpy(stZDKFH.khzwm_, stDianKuan_IN.sKHBH_U);         /*客户名*/
+    		strcpy(stZDKFH.yyjg_u,stDianKuan_IN.sRZJG_U);                       /*营业机构*/
+    		strcpy(stZDKFH.zwjg_u,stDianKuan_IN.sRZJG_U);             /*帐务机构号=营业机构*/
+    		strcpy(stZDKFH.khjg_u,stDianKuan_IN.sRZJG_U);                       /*开户机构=营业机构*/
+    		strcpy(stZDKFH.canpdm, "3000");                 /*产品代码*/
+    		strcpy(stZDKFH.kjlb_u, "2040");         /*会计类别*/
+    		strcpy(stZDKFH.cpmc_u, "个人住房短期消费贷款");                 /*产品名称*/
+    		strcpy(stZDKFH.qxrq_u, "20160324");         /*起息日期*/
+    		strcpy(stZDKFH.dqrq_u, "20170324");         /*到期日期*/
+    		strcpy(stZDKFH.qx_uuu, "12M");         /*期限*/
+    		strcpy(stZDKFH.hbdh_u, "01");         /*货币代号*/
+    		stZDKFH.htje_u = 100000;                /*合同金额*/
+    		stZDKFH.jjje_u = 100000;                /*借据金额*/
+    		stZDKFH.yiffje = 100000;                                   /*已发放金额*/
+    		stZDKFH.kffje_ = 0;                /*可发放金额*/
+    		stZDKFH.zcbj_u = 100000;                                   /*正常本金*/
+    		stZDKFH.ddkksx = 1000;                                /*多笔贷款扣款顺序,初始值1000*/
+    		stZDKFH.mxxh_u = 0;                                   /* 明细序号 */
+    		strcpy(stZDKFH.dkxt_u, "0");                          /*贷款形态:0-正常*/
+    		strcpy(stZDKFH.yjfyj_, "0");                          /*应计非应计状态:0-应计*/
+    		strcpy(stZDKFH.dkzhzt, "0");                          /*贷款账户状态:0-正常*/
+    		strcpy(stZDKFH.jlzt_u, "0");                          /*记录状态0-正常*/
+    		strcpy(stZDKFH.khrq_u, "20160324");                      /*开户日期*/
+    		//strcpy(stZDKFH.khgy_u, sJYGY_U);                      /*开户柜员*/
+    		//strcpy(stZDKFH.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		//strcpy(stZDKFH.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stZDKFH.zhcwrq, "20160324");                 /*最后财务交易日*/
+    		
+    		
+    		strcpy(stDQGJH.dkzh_u, sDKZH_U);                      /*贷款账号*/
+    		strcpy(stDQGJH.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		stDQGJH.bqqs_u = 1;                                   /*本期期数*/
+    		stDQGJH.bqzqs_ = 1000;                       /*本期子期数*/
+    		strcpy(stDQGJH.qsrq_u, "20160324");                      /*起始日期*/
+    		
+    		strcpy(stDQGJH.dqrq_u, "20170324");     /*到期日期*/
+    		
+    		
+    	
+    	  strcpy(stDQGJH.kxqdqr,"20160421");
+
+    		strcpy(stDQGJH.xyhkr_, "20160421");                 /*下次还款日*/
+    		stDQGJH.csbj_u = 0;                                   /*初始本金*/
+    		stDQGJH.cslx_u = 0;                                   /*初始利息*/
+    		stDQGJH.bj_uuu = 0;                                   /*本金*/
+    		stDQGJH.yylx_u = 0;                                   /*应收应计利息*/
+    		stDQGJH.csyjlx = 0;                                   /*催收应计利息*/
+    		stDQGJH.ysqx_u = 0;                                   /*应收欠息*/
+    		stDQGJH.csqx_u = 0;                                   /*催收欠息*/
+    		stDQGJH.ysyjfx = 0;                                   /*应收应计罚息*/
+    		stDQGJH.csyjfx = 0;                                   /*催收应计罚息*/
+    		stDQGJH.ysfx_u = 0;                                   /*应收罚息*/
+    		stDQGJH.csfx_u = 0;                                   /*催收罚息*/
+    		stDQGJH.yjfx_u = 0;                                   /*应计复息*/
+    		stDQGJH.fx_uuu = 0;                                   /*复息*/
+    		stDQGJH.yjtx_u = 0;                                   /*应计贴息*/
+    		stDQGJH.ystx_u = 0;                                   /*应收贴息*/
+    		stDQGJH.ysfy_u = 0;                                   /*应收费用*/
+    		stDQGJH.ysfj_u = 0;                                   /*应收罚金*/
+    		strcpy(stDQGJH.qgzl_u, "1");                          /*期供种类 1-标准期供*/
+    		strcpy(stDQGJH.jzqsr_, "20160324");
+    		strcpy(stDQGJH.jzdqr_, "20170324");
+    		strcpy(stDQGJH.qgzt_u, "0");                          /*本期状态*/
+    		strcpy(stDQGJH.yjfyj_, "0");                          /*应计非应计状态*/
+    		//strcpy(stDQGJH.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		//strcpy(stDQGJH.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stDQGJH.jlzt_u, "0");                          /*记录状态*/
+    		
+    		strcpy(stDTJXX.dkzh_u, sDKZH_U);                      /*贷款账号*/
+    		strcpy(stDTJXX.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		stDTJXX.ljfkje = 100000;                                   /*累计放款金额*/
+    		stDTJXX.snljfk = 0;                                   /*上年累计放款金额*/
+    		stDTJXX.bnljfk = 100000;                                   /*本年累计放款金额*/
+    		stDTJXX.zgdkye = 0;                                   /*最高贷款余额*/
+    		stDTJXX.snzgzh = 0;                                   /*上年最高账户余额*/
+    		stDTJXX.bnzgzh = 0;                                   /*本年最高账户余额*/
+    		stDTJXX.ljyhbj = 0;                                   /*累计已还本金*/
+    		stDTJXX.snljhb = 0;                                   /*上年累计已还本金*/
+    		stDTJXX.bnyhbj = 0;                                   /*本年累计已还本金*/
+    		stDTJXX.yshhxb = 0;                                   /*已收回核销本金*/
+    		stDTJXX.yshhxx = 0;                                   /*已收回核销利息*/
+    		stDTJXX.ljyhlx = 0;                                   /*累计已还利息*/
+    		stDTJXX.snljhx = 0;                                   /*上年累计已还利息*/
+    		stDTJXX.bnyhlx = 0;                                   /*本年累计已还利息*/
+    		stDTJXX.syljyh = 0;                                   /*上月累计已还利息*/
+    		stDTJXX.byljyh = 0;                                   /*本月累计已还利息*/
+    		//strcpy(stDTJXX.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		//strcpy(stDTJXX.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stDTJXX.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDZLXX.dkjjbm, sDKZH_U);         /* 贷款借据号 */
+    		strcpy(stDZLXX.wjflbz, "0");                          /*五级分类标志         */
+    		strcpy(stDZLXX.wjflrq, "20160324");                      /*五级分类日期         */
+    		strcpy(stDZLXX.wtdkbz, "0");                          /*委托贷款代扣税标志   */
+    		stDZLXX.wtdksl= 0;                                    /*委托贷款代扣税税率   */
+    		strcpy(stDZLXX.khjl_u, "");                           /*客户经理             */
+    		strcpy(stDZLXX.dkgljg, stDianKuan_IN.sRZJG_U);                      /*贷款管理机构         */
+    		strcpy(stDZLXX.lmdk_u, "0");                          /*是否联名贷款         */
+    		//strcpy(stDZLXX.whgy_u, sJYGY_U);                      /* 维护柜员 */
+    		//strcpy(stDZLXX.whrq_u, sJYRQ_U);                      /* 维护日期 */
+    		strcpy(stDZLXX.jlzt_u, "0");                          /* 记录状态 */
+    }	
+    else
+    {
+    
+        strcpy(stDDKZK.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKZK.dkdx_u, "0");                 /*贷款对象*/
+    		strcpy(stDDKZK.cndk_u, "0");                 /*承诺贷款*/
+    		strcpy(stDDKZK.xhdkbz, "0");                 /*循环贷款*/
+    		strcpy(stDDKZK.lhdk_u, "0");                 /*联合贷款*/
+    		strcpy(stDDKZK.ysdk_u, "0");                 /*衍生贷款*/
+    		strcpy(stDDKZK.dldk_u, "0");                 /*代理贷款*/
+    		strcpy(stDDKZK.ayjfyj, "1");                 /*按应计非应计核算*/
+    		strcpy(stDDKZK.ayyldh, "1");                 /*按一逾两呆核算*/
+    		strcpy(stDDKZK.dkxtfk, "1");                 /*贷款形态分科目核算*/
+    		//strcpy(stDDKZK.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKZK.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKZK.jlzt_u, "0");                          /*记录状态*/
+    		
+    		strcpy(stDDKED.dkjjbm, sDKZH_U);         /*贷款借据号*/
+            strcpy(stDDKED.syed_u, "0");                 /*是否使用额度*/
+            strcpy(stDDKED.sydkcn, "0");                 /*使用贷款承诺*/
+            strcpy(stDDKED.edbzgz, "");                 /*额度币种规则*/
+            strcpy(stDDKED.edzdbz, "");                 /*额度指定币种*/
+            strcpy(stDDKED.edsygz, "");                 /*额度使用规则*/
+            stDDKED.edsybl = 100;                                 /*额度使用比例*/
+            strcpy(stDDKED.sydkcn, "0");                          /*使用贷款承诺:否*/
+            strcpy(stDDKED.gljjbz, "0");                          /*关联借据标志:否*/
+            strcpy(stDDKED.jlzt_u, "0");                          /*记录状态*/		
+    		
+    		
+    		strcpy(stDDKFK.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKFK.dkrzzh, stDianKuan_IN.sHKZH_U);         /*贷款入帐帐号*/
+    		strcpy(stDDKFK.ajxmbh, "");                           /*按揭项目编号*/
+    		strcpy(stDDKFK.ajxmmc, "");                           /*按揭项目名称*/
+    		strcpy(stDDKFK.mfkhh_, "");                           /*开发商客户号*/
+    		strcpy(stDDKFK.mfkhm_, "");                           /*开发商客户名*/
+    		strcpy(stDDKFK.mfzh_u, "");                           /*开发商帐号*/
+    		strcpy(stDDKFK.zqxfk_, "0");                 					/*周期性放款*/
+    		strcpy(stDDKFK.fkzq_u, "");                 					/*放款周期*/
+    		strcpy(stDDKFK.fkfsbm, "");                 					/*放款方式*/
+    		stDDKFK.mcfkje = 0;                        						/*每次放款金额*/
+    		strcpy(stDDKFK.dzfkjh, "0");                          /*定制放款计划*/
+    		strcpy(stDDKFK.scfkr_, "");                           /*上次放款日*/
+    		strcpy(stDDKFK.jxhjyd, "4");                 /*借新还旧原贷款控制*/
+    		strcpy(stDDKFK.jxhjhk, "1");                 /*借新还旧还款控制*/
+    		//strcpy(stDDKFK.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKFK.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKFK.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDDKJX.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKJX.jxgz_u, "10");                 /*计息规则*/
+    		strcpy(stDDKJX.lllx_u, "2");                 /* 利率类型 */
+    		strcpy(stDDKJX.ltjxgz, "1");                 /*零头计息规则*/
+    		strcpy(stDDKJX.llfd_u, "0");                          /*利率分段*/
+    		stDDKJX.zxll_u= 5.6;                         /*利率*/
+    		strcpy(stDDKJX.whllzl, "");                 /*外汇利率种类*/
+    		strcpy(stDDKJX.whllqx, "");                 /*外汇利率浮动种类*/
+    		strcpy(stDDKJX.kxyqgz, "1");                 /* 宽限期转逾期规则 */
+    		strcpy(stDDKJX.nyll_u, "Y");                 /*年/月利率*/
+    		stDDKJX.zxll_u = 5.6;                /*利率*/
+    		strcpy(stDDKJX.lltzfs, "2");                 /*利率调整方式*/
+    		strcpy(stDDKJX.lltzzq, "1YA0101");                 /*利率调整周期*/
+    		strcpy(stDDKJX.llfdfs, "2");                 /*利率浮动方式*/
+    		stDDKJX.llfdz_ = 0.00;                        /*利率浮动值*/
+    		strcpy(stDDKJX.zcllbh, "D01");                 /*正常利率编号*/
+    		strcpy(stDDKJX.ysxfs_, "0");                 /*预收息方式*/
+    		strcpy(stDDKJX.lxtxzq, "");                 /*利息摊消周期*/
+    		strcpy(stDDKJX.mctxfs, "2");                 /*每次摊消方式*/
+    		stDDKJX.mctxbl = 0.00;                        /*每次摊消比例*/
+    		//stDDKJX.ysxze_ = stDDKJX.ysxze_;                        /*预收息总额*/
+    		
+    		strcpy(stDDKJX.ysxfs_, "0");                 /*预收息方式*/
+    		strcpy(stDDKJX.mctxfs, "2");                 /*每次摊消方式*/
+    		stDDKJX.mctxbl = 0.00;                        /*每次摊消比例*/
+    		//stDDKJX.kxq_uu = CJXSX_KXQ_UU;                        /*宽限期*/
+    		strcpy(stDDKJX.kxsxgz, "1");                 /*宽限期收息规则*/
+    		strcpy(stDDKJX.kxjrgz, "1");                 /*宽限期节假日规则*/
+    		strcpy(stDDKJX.yxycdd, "0");                 /*允许以存抵贷*/
+    		strcpy(stDDKJX.jx_uuu, "0");                 /*计息*/
+    		strcpy(stDDKJX.jfx_uu, "0");                 /*计复息*/
+    		strcpy(stDDKJX.fxjx_u, "0");                 /*复息计息*/
+    		strcpy(stDDKJX.txbzdm, "0");                          /*停息标志*/
+    		strcpy(stDDKJX.yqjxfs, "2");                 /*逾期计息方式*/
+    		strcpy(stDDKJX.yqllbh, "");                 /*逾期利率编号*/
+    		strcpy(stDDKJX.yqfxfs, "2");                 /*逾期罚息浮动方式*/
+    		stDDKJX.yqfxfd = 0.0;                        /*逾期罚息浮动值*/
+    		strcpy(stDDKJX.yqnyll, "Y");                 /*逾期年月利率*/
+    		stDDKJX.zdyqll = 50;                        /*逾期利率*/
+    		strcpy(stDDKJX.txbzw_, "0");                          /*贴息标志*/
+    		strcpy(stDDKJX.sctxr_, "20160324");         /*上次调息日 = 起息日期 */
+    		//stDDKJX.lltzzq
+    		strcpy(stDDKJX.lxtxzq, "1YA0101");   
+    		
+    		strcpy(stDDKJX.scjxr_, "20160324");                      /*上次结息日 */
+    		//strcpy(stDDKJX.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKJX.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKJX.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		
+    		strcpy(stDDKHK.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKHK.hkfs_u, "2");                 /*还款方式*/
+    		
+    		if (0 == strcmp(stDDKHK.hkfs_u,"3"))
+    		    strcpy(stDDKHK.declgz, "1");                      /*等额处理规则    */
+    		
+    		strcpy(stDDKHK.qxbgjh, "0");                 /*期限变更调整计划*/
+    		strcpy(stDDKHK.llbgjh, "0");                 /*利率变更调整计划*/
+    		strcpy(stDDKHK.dcfkjh, "0");                 /*多次放款调整计划*/
+    		stDDKHK.sylxlv = 0;                                   /*顺延利息*/
+    		stDDKHK.ljz_uu = 0;                        /*累进额度*/
+    		stDDKHK.ljqjqs = 0;                        /*累进区间期数*/
+    		strcpy(stDDKHK.hkzq_u, "1MA21");                 /*还款周期*/
+    		strcpy(stDDKHK.dplhk_, "0");                 /*多频率还款*/
+    		strcpy(stDDKHK.hbzq_u, "");                  /*还本周期*/
+    		strcpy(stDDKHK.yqhkzq, "");                  /*逾期还款周期*/
+    		
+    		stDDKHK.bqzqs_ = 1000;                       /*本期子期数*/
+    		stDDKHK.sylxlv = 0;                                   /*顺延利息*/
+    		strcpy(stDDKHK.schkr_, "20160324");         /*上次还款日*/
+    		strcpy(stDDKHK.hkqx_u, "600M");         /*还款期限*/
+    		stDDKHK.blje_u = 0;                                   /*保留金额*/
+    		stDDKHK.mqhkze = 0;                                   /*每期还款总额*/
+    		stDDKHK.mqhbje = 0;                                   /*每期还本金额*/
+    		strcpy(stDDKHK.bjfd_u, "0");                          /*本金分段*/
+    		strcpy(stDDKHK.dzhkjh, "0");                          /*定制还款计划*/
+    		
+    		stDDKHK.zqs_uu = 600;
+    		
+    		
+    		stDDKHK.bqqs_u = 1;                                   /*本期期数*/
+    		stDDKHK.jxzqs_ = stDDKHK.zqs_uu;                        /*计息总期数*/
+    		stDDKHK.jxqs_u = 1;                                   /*计息期数*/
+    		stDDKHK.jxbj_u = 100000;                              /*计息本金*/
+    		stDDKHK.dqbjds = 0;                                   /*当前本金段数*/
+    		strcpy(stDDKHK.hksxxh, "LNKKSX001");                 /*还款顺序编号*/
+    		strcpy(stDDKHK.yxtqhk, "1");                 /*允许提前还款*/
+    		strcpy(stDDKHK.tqhkhx, "1");                 /*提前还款是否还息*/
+    		strcpy(stDDKHK.thkhtx, "0");                 /*提前还款是否还贴息*/
+    		strcpy(stDDKHK.tqhkcd, "0");                 /*提前还款冲抵逾期本息*/
+    		stDDKHK.ytqhkj = 0;                                   /*已提前还款金额*/
+    		strcpy(stDDKHK.tqhkjh, "0");                 /*提前还款是否调整还款计划*/
+    		strcpy(stDDKHK.zdkk_u, "1");                 /*自动扣款*/
+    		strcpy(stDDKHK.zdjqdk, "1");                 /*自动结清贷款*/
+    		strcpy(stDDKHK.dghkzh, "0");                          /*多个还款帐号 0-否*/
+    		
+    		strcpy(stDDKHK.hkzh_u, stDianKuan_IN.sHKZH_U);     /*还款帐号*/
+    		strcpy(stDDKHK.qyxhdk, "0");                          /*签约循环贷款:0-否*/
+    		//strcpy(stDDKHK.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stDDKHK.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDDKDQ.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKDQ.dqkxgz, "0");                 /*到期扣息规则*/
+    		strcpy(stDDKDQ.yxdkzq, "0");                 /*允许贷款展期*/
+    		strcpy(stDDKDQ.zqxzek, "0");                 /*展期需足额扣款*/
+    		stDDKDQ.zqzdcs = 3;                        /*展期最大次数*/
+    		strcpy(stDDKDQ.zqgzbh, "");                 /*展期控制编号*/
+    		stDDKDQ.yzqcs_ = 0;                                   /*已展期次数*/
+    		strcpy(stDDKDQ.ydkdqr, "20170324");         /*原贷款到期日*/
+    		//strcpy(stDDKDQ.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKDQ.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKDQ.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		
+    		
+    		strcpy(stDDKXT.dkjjbm, sDKZH_U);         /* 贷款借据号   */
+    		strcpy(stDDKXT.zdxtzy, "1");                 /* 自动处理:1-是 */
+    		strcpy(stDDKXT.lxzcgz, "1");                 /* 利息转出规则:2-全部转出 */
+    		strcpy(stDDKXT.lxzhgz, "1");                 /* 利息转回规则 */
+    		strcpy(stDDKXT.xtzybh, "");                 /* 形态转移编号 */
+    		//strcpy(stDDKXT.whgy_u, sJYGY_U);                      /* 维护柜员 */
+    		//strcpy(stDDKXT.whrq_u, sJYRQ_U);                      /* 维护日期 */
+    		strcpy(stDDKXT.jlzt_u, "0");                          /* 记录状态:0-正常*/
+    		
+    		
+    		
+    		strcpy(stDDKFJ.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stDDKFJ.hkfjbh, "");                 /*提前还款罚金编号*/
+    		strcpy(stDDKFJ.hkfjmc, "");                 /*提前还款罚金名称*/
+    		stDDKFJ.hkfjje = 0;                                   /*提前还款附加罚金金额*/
+    		strcpy(stDDKFJ.yqfjbh, "");                 /*逾期还款罚金编号*/
+    		strcpy(stDDKFJ.yqfjmc, "");                 /*逾期还款罚金名称*/
+    		stDDKFJ.yqfjfj = 0;                                   /*逾期还款附加罚金金额*/
+    		//strcpy(stDDKFJ.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKFJ.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		strcpy(stDDKFJ.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDDKTZ.dkjjbm, sDKZH_U);       /*贷款借据号*/
+    		strcpy(stDDKTZ.zctqtz, "0");                 /*正常提前通知*/
+    		stDDKTZ.tqts_u= 0;                         /*提前天数*/
+    		strcpy(stDDKTZ.yqcstz, "0");                 /*逾期催收通知*/
+    		stDDKTZ.tzjgts= 0;                         /*通知间隔天数*/
+    		strcpy(stDDKTZ.xctzrq ,"18991231");
+    		strcpy(stDDKTZ.llbgtz, "0");                 /*利率变更通知*/
+    		strcpy(stDDKTZ.yebgtz, "0");                 /*余额变更通知*/
+    		strcpy(stDDKTZ.khhddy, "0");                 /*客户回单打印*/
+    		//strcpy(stDDKTZ.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		//strcpy(stDDKTZ.whrq_u, sJYRQ_U);                      /*维护柜员*/
+    		strcpy(stDDKTZ.jlzt_u, "0");                          /*记录状态*/
+    		
+   		  strcpy(stZDKFH.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		strcpy(stZDKFH.dkzh_u, sDKZH_U);                      /*贷款账号*/
+    		strcpy(stZDKFH.hth_uu, sDKZH_U);         /*合同编号*/
+    		strcpy(stZDKFH.khbh_u, stDianKuan_IN.sKHBH_U);         /*客户号*/
+    		strcpy(stZDKFH.khzwm_, stDianKuan_IN.sKHBH_U);         /*客户名*/
+    		strcpy(stZDKFH.yyjg_u,stDianKuan_IN.sRZJG_U);                       /*营业机构*/
+    		strcpy(stZDKFH.zwjg_u,stDianKuan_IN.sRZJG_U);             /*帐务机构号=营业机构*/
+    		strcpy(stZDKFH.khjg_u,stDianKuan_IN.sRZJG_U);                       /*开户机构=营业机构*/
+    		strcpy(stZDKFH.canpdm, "4000");                 /*产品代码*/
+    		strcpy(stZDKFH.kjlb_u, "2213");         /*会计类别*/
+    		strcpy(stZDKFH.cpmc_u, "机构类长期普通贷款");                 /*产品名称*/
+    		strcpy(stZDKFH.qxrq_u, "20160324");         /*起息日期*/
+    		strcpy(stZDKFH.dqrq_u, "20170324");         /*到期日期*/
+    		strcpy(stZDKFH.qx_uuu, "600M");         /*期限*/
+    		strcpy(stZDKFH.hbdh_u, "01");         /*货币代号*/
+    		stZDKFH.htje_u = 100000;                /*合同金额*/
+    		stZDKFH.jjje_u = 100000;                /*借据金额*/
+    		stZDKFH.yiffje = 100000;                                   /*已发放金额*/
+    		stZDKFH.kffje_ = 0;                /*可发放金额*/
+    		stZDKFH.zcbj_u = 100000;                                   /*正常本金*/
+    		stZDKFH.ddkksx = 1000;                                /*多笔贷款扣款顺序,初始值1000*/
+    		stZDKFH.mxxh_u = 0;                                   /* 明细序号 */
+    		strcpy(stZDKFH.dkxt_u, "0");                          /*贷款形态:0-正常*/
+    		strcpy(stZDKFH.yjfyj_, "0");                          /*应计非应计状态:0-应计*/
+    		strcpy(stZDKFH.dkzhzt, "0");                          /*贷款账户状态:0-正常*/
+    		strcpy(stZDKFH.jlzt_u, "0");                          /*记录状态0-正常*/
+    		strcpy(stZDKFH.khrq_u, "20160324");                      /*开户日期*/
+    		//strcpy(stZDKFH.khgy_u, sJYGY_U);                      /*开户柜员*/
+    		//strcpy(stZDKFH.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		//strcpy(stZDKFH.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stZDKFH.zhcwrq, "20160324");                 /*最后财务交易日*/
+    		
+    		
+    		strcpy(stDQGJH.dkzh_u, sDKZH_U);                      /*贷款账号*/
+    		strcpy(stDQGJH.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		stDQGJH.bqqs_u = 1;                                   /*本期期数*/
+    		stDQGJH.bqzqs_ = 1000;                       /*本期子期数*/
+    		strcpy(stDQGJH.qsrq_u, "20160324");                      /*起始日期*/
+    		
+    		strcpy(stDQGJH.dqrq_u, "20170324");     /*到期日期*/
+    		
+    		
+    	
+    	  strcpy(stDQGJH.kxqdqr,"20160421");
+
+    		strcpy(stDQGJH.xyhkr_, "20160421");                 /*下次还款日*/
+    		stDQGJH.csbj_u = 0;                                   /*初始本金*/
+    		stDQGJH.cslx_u = 0;                                   /*初始利息*/
+    		stDQGJH.bj_uuu = 0;                                   /*本金*/
+    		stDQGJH.yylx_u = 0;                                   /*应收应计利息*/
+    		stDQGJH.csyjlx = 0;                                   /*催收应计利息*/
+    		stDQGJH.ysqx_u = 0;                                   /*应收欠息*/
+    		stDQGJH.csqx_u = 0;                                   /*催收欠息*/
+    		stDQGJH.ysyjfx = 0;                                   /*应收应计罚息*/
+    		stDQGJH.csyjfx = 0;                                   /*催收应计罚息*/
+    		stDQGJH.ysfx_u = 0;                                   /*应收罚息*/
+    		stDQGJH.csfx_u = 0;                                   /*催收罚息*/
+    		stDQGJH.yjfx_u = 0;                                   /*应计复息*/
+    		stDQGJH.fx_uuu = 0;                                   /*复息*/
+    		stDQGJH.yjtx_u = 0;                                   /*应计贴息*/
+    		stDQGJH.ystx_u = 0;                                   /*应收贴息*/
+    		stDQGJH.ysfy_u = 0;                                   /*应收费用*/
+    		stDQGJH.ysfj_u = 0;                                   /*应收罚金*/
+    		strcpy(stDQGJH.qgzl_u, "1");                          /*期供种类 1-标准期供*/
+    		strcpy(stDQGJH.jzqsr_, "20160324");
+    		strcpy(stDQGJH.jzdqr_, "20170324");
+    		strcpy(stDQGJH.qgzt_u, "0");                          /*本期状态*/
+    		strcpy(stDQGJH.yjfyj_, "0");                          /*应计非应计状态*/
+    		//strcpy(stDQGJH.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		//strcpy(stDQGJH.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stDQGJH.jlzt_u, "0");                          /*记录状态*/
+    		
+    		strcpy(stDTJXX.dkzh_u, sDKZH_U);                      /*贷款账号*/
+    		strcpy(stDTJXX.dkjjbm, sDKZH_U);         /*贷款借据号*/
+    		stDTJXX.ljfkje = 100000;                                   /*累计放款金额*/
+    		stDTJXX.snljfk = 0;                                   /*上年累计放款金额*/
+    		stDTJXX.bnljfk = 100000;                                   /*本年累计放款金额*/
+    		stDTJXX.zgdkye = 0;                                   /*最高贷款余额*/
+    		stDTJXX.snzgzh = 0;                                   /*上年最高账户余额*/
+    		stDTJXX.bnzgzh = 0;                                   /*本年最高账户余额*/
+    		stDTJXX.ljyhbj = 0;                                   /*累计已还本金*/
+    		stDTJXX.snljhb = 0;                                   /*上年累计已还本金*/
+    		stDTJXX.bnyhbj = 0;                                   /*本年累计已还本金*/
+    		stDTJXX.yshhxb = 0;                                   /*已收回核销本金*/
+    		stDTJXX.yshhxx = 0;                                   /*已收回核销利息*/
+    		stDTJXX.ljyhlx = 0;                                   /*累计已还利息*/
+    		stDTJXX.snljhx = 0;                                   /*上年累计已还利息*/
+    		stDTJXX.bnyhlx = 0;                                   /*本年累计已还利息*/
+    		stDTJXX.syljyh = 0;                                   /*上月累计已还利息*/
+    		stDTJXX.byljyh = 0;                                   /*本月累计已还利息*/
+    		//strcpy(stDTJXX.whrq_u, sJYRQ_U);                      /*维护日期*/
+    		//strcpy(stDTJXX.whgy_u, sJYGY_U);                      /*维护柜员*/
+    		strcpy(stDTJXX.jlzt_u, "0");                          /*记录状态*/
+    		
+    		
+    		strcpy(stDZLXX.dkjjbm, sDKZH_U);         /* 贷款借据号 */
+    		strcpy(stDZLXX.wjflbz, "0");                          /*五级分类标志         */
+    		strcpy(stDZLXX.wjflrq, "20160324");                      /*五级分类日期         */
+    		strcpy(stDZLXX.wtdkbz, "0");                          /*委托贷款代扣税标志   */
+    		stDZLXX.wtdksl= 0;                                    /*委托贷款代扣税税率   */
+    		strcpy(stDZLXX.khjl_u, "");                           /*客户经理             */
+    		strcpy(stDZLXX.dkgljg, stDianKuan_IN.sRZJG_U);                      /*贷款管理机构         */
+    		strcpy(stDZLXX.lmdk_u, "0");                          /*是否联名贷款         */
+    		//strcpy(stDZLXX.whgy_u, sJYGY_U);                      /* 维护柜员 */
+    		//strcpy(stDZLXX.whrq_u, sJYRQ_U);                      /* 维护日期 */
+    		strcpy(stDZLXX.jlzt_u, "0");                          /* 记录状态 */
+    }	
+
+    /*=====================User Code End=====================*/
+    return SUCCESS;
+
+}

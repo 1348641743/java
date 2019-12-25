@@ -1,0 +1,213 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "public.h"
+
+#define DFN_DGRKH
+#define DFN_DZJXX
+
+#include "dgrkh.h"
+#include "dzjxx.h"
+
+/********************
+	argv[1] 为法人代码
+	argv[2] 为机构代码
+	argv[3] 为数据量  
+********************/
+
+int printDGRKH(TBL_DGRKH stDGRKH,char *sYYJG_U);
+int printDZJXX(TBL_DZJXX stDZJXX,char *sYYJG_U);
+
+int main(int argc, char *argv[])
+{
+
+	char	sFRDM_U[FRDM_U_SIZE+1];
+	char	sYYJG_U[YYJG_U_SIZE+1];
+	int		iResult = SUCCESS;
+	long    i=0,j=1;  
+
+	TBL_DGRKH stDGRKH;
+ 	TBL_DZJXX stDZJXX;
+
+	memset(sFRDM_U, 0, sizeof(sFRDM_U));
+	memset(sYYJG_U, 0, sizeof(sYYJG_U));
+
+	strcpy(sFRDM_U, argv[1]);
+	strcpy(sYYJG_U, argv[2]);
+ 
+	printf("sFRDM_U is [%s], sYYJG_U is [%s]\n", sFRDM_U, sYYJG_U);
+	/*====================User Code Begin====================*/
+    for ( i = 0; i < atol(argv[3]); i++ )
+    {
+    	//memset(&dzjxx.stDZJXX,0,sizeof(dzjxx.stDZJXX)); 
+    	//memset(&dgrkh.stDGRKH,0,sizeof(dgrkh.stDGRKH));
+	memset(&stDGRKH, 0, sizeof(stDGRKH));
+	memset(&stDZJXX, 0, sizeof(stDZJXX));
+strcpy(stDGRKH.frdm_u,sFRDM_U);	//法人代码	D	'9999'
+sprintf(stDGRKH.khbh_u,"01%s%06d",sYYJG_U,j);	//客户号	N
+strcpy(stDGRKH.zjzl_u,"10");	//客户证件类型	N
+strcpy(stDGRKH.zjhm_u,stDGRKH.khbh_u);	//客户证件号码	N
+sprintf(stDGRKH.grmc_u, "%s",stDGRKH.khbh_u); 	//客户名称	N
+strcpy(stDGRKH.ywmc_u,"");	//客户英文名称		
+strcpy(stDGRKH.ywpyx_,"");	//客户英文姓		
+strcpy(stDGRKH.ywpym_,"");	//客户英文名		
+strcpy(stDGRKH.cym_uu,"");	//客户曾用名称		
+strcpy(stDGRKH.khcyym,"");	//客户曾用英文名称		
+strcpy(stDGRKH.cw_uuu,"");	//客户称谓标志		
+strcpy(stDGRKH.dzdm_u,"");	//大洲代码		D '01'
+strcpy(stDGRKH.gbdm_u,"");	//国家代码		D 'CHN'
+strcpy(stDGRKH.sdm_uu,"");	//省代码		
+strcpy(stDGRKH.shidm_,"");	//市代码		
+strcpy(stDGRKH.xdm_uu,"");	//县代码		
+strcpy(stDGRKH.mz_uuu,"");	//民族		
+strcpy(stDGRKH.xb_uuu,"");	//性别		
+strcpy(stDGRKH.csrq_u,"");	//出生日期		
+strcpy(stDGRKH.yyan_u,"");	//首选语言		
+strcpy(stDGRKH.zjxy_u,"");	//宗教信仰		
+strcpy(stDGRKH.hyzk_u,"");	//婚姻状态		
+strcpy(stDGRKH.jkzk_u,"");	//健康状况		
+strcpy(stDGRKH.xw_uuu,"");	//最高学位		
+strcpy(stDGRKH.xl_uuu,"");	//最高学历		
+strcpy(stDGRKH.zyzg_u,"");	//执业资格		
+strcpy(stDGRKH.zhiy_u,"");	//职业		
+strcpy(stDGRKH.zwfl_u,"");	//职务		
+strcpy(stDGRKH.zc_uuu,"");	//职称		
+strcpy(stDGRKH.cyzkdm,"");	//从业状况		
+strcpy(stDGRKH.hydm_u,"");	//行业类别		
+strcpy(stDGRKH.zzmm_u,"");	//政治面貌		
+stDGRKH.znqk_u = 0;         //子女情况		
+stDGRKH.jtrk_u = 0;					//家庭人口		
+stDGRKH.fdjtcy = 0;					//供养人口		
+strcpy(stDGRKH.hjdzbh,"");	//户籍地址编号		
+strcpy(stDGRKH.jzdzbh,"");	//居住地址编号		
+strcpy(stDGRKH.dwdzbh,"");	//单位地址编号		
+strcpy(stDGRKH.txdzbh,"");	//通讯地址编号		
+strcpy(stDGRKH.yjdzbh,"");	//邮寄地址编号		
+strcpy(stDGRKH.yddhbh,"");	//移动电话编号		
+strcpy(stDGRKH.zzdhbh,"");	//住宅电话编号		
+strcpy(stDGRKH.dwdhbh,"");	//单位电话编号		
+strcpy(stDGRKH.dzyjbh,"");	//电子邮件编号		
+strcpy(stDGRKH.gzdwbh,"");	//工作单位编号		
+strcpy(stDGRKH.scgzsj,"");	//首次工作时间		
+strcpy(stDGRKH.zjlxsj,"");	//最佳联系时间		
+strcpy(stDGRKH.zjlxfs,"");	//最佳联系方式		
+strcpy(stDGRKH.phjsfs,"");	//偏好寄送方式		
+strcpy(stDGRKH.sfjnjm,"");	//境内居民		D	'1'
+strcpy(stDGRKH.khjmsx,"");	//居民属性		D	'1'
+strcpy(stDGRKH.nhbz_u,"");	//农户标志		D	'0'
+strcpy(stDGRKH.sfygbz,"");	//员工标志		D	'0'
+strcpy(stDGRKH.sfcszd,"");	//账单标志		D	'0'
+strcpy(stDGRKH.hbdh_u,"");	//货币代号		D	'01'
+strcpy(stDGRKH.sfkhcx,"");	//客户促销标志		D '0'
+strcpy(stDGRKH.sfsmkh,"");	//睡眠客户标志		D '0'
+strcpy(stDGRKH.sfdjbz,"");	//冻结客户标志		D '0'
+strcpy(stDGRKH.sfswbz,"");	//死亡客户标志		D '0'
+strcpy(stDGRKH.sfhcbz,"");	//身份核查标志		D '0'
+strcpy(stDGRKH.ywfyj_,"");	//客户复印件标志		D '0'
+strcpy(stDGRKH.khsdbz,"");	//客户锁定标志		D '0'
+strcpy(stDGRKH.khqcbz,"");	//允许清除标志		D '0'
+strcpy(stDGRKH.hmdbz_,"");	//黑名单标志		D '0'
+strcpy(stDGRKH.huimdb,"");	//灰名单标志		D '0'
+strcpy(stDGRKH.wgbz_u,"");	//违规标志		D '0'
+strcpy(stDGRKH.khyxzt,"");	//客户有效状态		D '01'
+strcpy(stDGRKH.khzt_u,"");	//客户状态		D '0'
+strcpy(stDGRKH.shnxrq,"");	//生效日期		
+strcpy(stDGRKH.sckhrq,"");	//首次开户日期		
+strcpy(stDGRKH.scdkrq,"");	//首次贷款日期		
+strcpy(stDGRKH.khfwjb,"");	//服务级别		
+strcpy(stDGRKH.khjzxx,"");	//价值信息		
+strcpy(stDGRKH.wwktyw,"");	//外围系统开通业务集		
+strcpy(stDGRKH.khxxly,"");	//客户信息来源		
+strcpy(stDGRKH.gsjg_u,"");	//归属机构		
+strcpy(stDGRKH.zbjg_u,"");	//主办机构编号		/** 将stDGRKH.ZUBOJG 改为stDGRKH.ZBJG_U  jinjt 20160712 **/	
+strcpy(stDGRKH.zbjlbh,"");	//主办经理编号		
+strcpy(stDGRKH.xdjg_u,"");	//信贷机构编号		
+strcpy(stDGRKH.xdjlbh,"");	//信贷经理编号		
+strcpy(stDGRKH.yxjg_u,"");	//营销机构编号		
+strcpy(stDGRKH.yxr_uu,"");	//营销经理编号		
+strcpy(stDGRKH.bm_uuu,"");	//内部部门号		
+strcpy(stDGRKH.jgh_uu,"");	//内部机构号		
+strcpy(stDGRKH.sybbh_,"");	//事业部编号		
+strcpy(stDGRKH.bzxx_u,"");	//备注信息		
+strcpy(stDGRKH.bybz1_,"");	//备用标志		
+strcpy(stDGRKH.bybz2_,"");	//备用标志		
+strcpy(stDGRKH.byzd4w,"");	//备用字段4位		
+strcpy(stDGRKH.byzd40,"");	//备用字段40位		
+strcpy(stDGRKH.ylzd1_,"");	//预留字段01		
+strcpy(stDGRKH.byzd1_,"");	//预留字段04		
+strcpy(stDGRKH.byzd4_,"");	//备用字段		
+strcpy(stDGRKH.scjyr_,"");	//上次交易日期		
+strcpy(stDGRKH.khrq_u,"");	//创建日期		
+stDGRKH.khsj_u = 0 ;				//创建时间		
+strcpy(stDGRKH.khgyls,"");	//创建流水号		
+strcpy(stDGRKH.khjg_u,"");	//创建机构		
+strcpy(stDGRKH.khgy_u,"");	//创建柜员		
+strcpy(stDGRKH.sqgy_u,"");	//授权柜员			/** 将stDGRKH.SHOQGY 改为stDGRKH.SQGY_U jinjt **/	
+strcpy(stDGRKH.fqqd_u,"");	//发起渠道		
+strcpy(stDGRKH.whrq_u,"");	//维护日期		
+stDGRKH.whsj_u = 0;					//维护时间		
+strcpy(stDGRKH.whgyls,"");	//维护柜员流水号		
+strcpy(stDGRKH.whjg_u,"");	//维护机构		
+strcpy(stDGRKH.whgy_u,"");	//维护柜员		
+strcpy(stDGRKH.whsqgy,"");	//维护授权柜员		
+strcpy(stDGRKH.whqd_u,"");	//维护渠道		
+stDGRKH.sjc_uu = 0;					//时间戳
+strcpy(stDGRKH.jlzt_u,"0");	//记录状态	D	"0"
+		
+strcpy(stDZJXX.frdm_u,sFRDM_U);  //	法人代码	D	'9999'
+strcpy(stDZJXX.khbh_u,stDGRKH.khbh_u);  //	客户号	N	
+strcpy(stDZJXX.khlx_u,"01");  //	客户类型	N	
+strcpy(stDZJXX.khzwm_,stDGRKH.grmc_u);  //	客户中文名	N	
+strcpy(stDZJXX.zjzl_u,stDGRKH.zjzl_u);  //	证件种类	N	
+strcpy(stDZJXX.zjzlms,"身份证");  //	其他证件描述		
+strcpy(stDZJXX.zmwjbh,stDGRKH.zjhm_u);  //	证书文件编号	N	
+strcpy(stDZJXX.qfrq_u,"");  //	证件签发日期		
+strcpy(stDZJXX.zjyxq_,"");  //	证件有效期		
+strcpy(stDZJXX.shixrq,"");  //	证件失效日期		
+strcpy(stDZJXX.dqdm_u,"");  //	地区代码(4)		
+strcpy(stDZJXX.ssdqdm,"");  //	发证地区代码(6)		
+strcpy(stDZJXX.ssdq_u,"");  //	地区名称		
+strcpy(stDZJXX.fzjggj,"");  //	发证机关国家		
+strcpy(stDZJXX.fzjg_u,"");  //	发证机关		
+strcpy(stDZJXX.zjdjdz,"");  //	证件登记地址		
+strcpy(stDZJXX.ywdz_u,"");  //	英文地址		
+strcpy(stDZJXX.fzh1sm,"");  //	辅助号1说明		
+strcpy(stDZJXX.zjfzh1,"");  //	辅助编号1		
+strcpy(stDZJXX.fzh2sm,"");  //	辅助号2说明		
+strcpy(stDZJXX.zjfzh2,"");  //	辅助编号2		
+strcpy(stDZJXX.fzh3sm,"");  //	辅助号3说明		
+strcpy(stDZJXX.zjfzh3,"");  //	辅助编号3		
+strcpy(stDZJXX.zxxbz_,"1");  //	主信息标志		
+strcpy(stDZJXX.khyxzj,"");  //	开户有效证件		
+strcpy(stDZJXX.bssfzj,"");  //	标识身份证件		
+strcpy(stDZJXX.sm_uuu,"");  //	说明		
+strcpy(stDZJXX.byzd1_,"");  //	备用字段		
+strcpy(stDZJXX.jyrq_u,"");  //	交易日期		
+stDZJXX.jysj_u = 0;  				//	交易时间			/** stDZJXX.JYSHIJ 改为 stDZJXX.JYSJ_U jinjt 20160712 **/	
+strcpy(stDZJXX.jygy_u,"");  //	交易柜员		
+strcpy(stDZJXX.jyjg_u,"");  //	交易机构			   /** stDZJXX.JYJIEG -> stDZJXX.JYJG_U **/	
+strcpy(stDZJXX.sqgy_u,"");  //	授权柜员			   /** stDZJXX.SHOQGY -> stDZJXX.SQGY_U **/	
+strcpy(stDZJXX.gylshm,"");  //	柜员流水号		
+strcpy(stDZJXX.fqqd_u,"");  //	发起渠道		
+strcpy(stDZJXX.whrq_u,"");  //	维护日期		
+stDZJXX.whsj_u = 0;  				//	维护时间		
+strcpy(stDZJXX.whgy_u,"");  //	维护柜员		
+strcpy(stDZJXX.whjg_u,"");  //	维护机构		
+strcpy(stDZJXX.whsqgy,"");  //	维护授权柜员		
+strcpy(stDZJXX.whgyls,"");  //	维护柜员流水		
+strcpy(stDZJXX.whqd_u,"");  //	维护渠道		
+strcpy(stDZJXX.scjyr_,"");  //	上次交易日期		
+stDZJXX.sjc_uu = 0; 				//	时间戳	D	0
+strcpy(stDZJXX.jlzt_u,"0");  //	记录状态	D	"0"
+
+printDGRKH(stDGRKH,sYYJG_U);
+printDZJXX(stDZJXX,sYYJG_U);
+
+j++;
+
+}
+	/*=====================User Code End=====================*/
+	return iResult;
+ 
+}
+
